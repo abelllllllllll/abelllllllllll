@@ -1,3 +1,11 @@
 __pycache__/
 *.pyc
 .venv/
+
+# --- Privacidad: tus datos y reportes NUNCA se suben a GitHub ---
+# Solo se suben los datos de ejemplo (inventados) y su reporte.
+analisis_datos/datos/*
+!analisis_datos/datos/ventas_ejemplo.csv
+analisis_datos/resultados/*
+!analisis_datos/resultados/.gitkeep
+!analisis_datos/resultados/ventas_ejemplo/

@@ -5,6 +5,15 @@ Lo más nuevo va arriba.
 
 ---
 
+## 07/11/2026 — Privacidad de los datos
+
+**Qué se hizo:** los archivos en `datos/` y sus reportes en `resultados/` ya no se suben a GitHub.
+
+**Por qué:** el repositorio es público y los datos reales (gastos, ingresos, ventas) son personales.
+Solo se suben los datos de ejemplo, que son inventados.
+
+---
+
 ## 07/11/2026 — Primera versión
 
 **Qué se hizo:**

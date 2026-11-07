@@ -25,6 +25,10 @@ python analizar.py
 
 Listo. Tu reporte aparece en `resultados/<nombre-de-tu-archivo>/REPORTE.md`.
 
+> 🔒 **Tus datos son privados:** lo que pongas en `datos/` y los reportes que se generen
+> **nunca se suben a GitHub** (están bloqueados en `.gitignore`). Se quedan solo en tu computadora.
+> Lo único que se sube son los datos de ejemplo, que son inventados.
+
 > Si solo quieres analizar un archivo: `python analizar.py datos/mi_archivo.csv`
 
 ---
