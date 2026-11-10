@@ -33,6 +33,7 @@
 ### 📂 Proyectos
 
 - 📊 [Analizador de datos](analisis_datos/) — le das un CSV o Excel y te regresa un reporte con hallazgos y gráficas.
+- 🧴 [Aplicador de crema motorizado](aplicador_crema/) — prototipo casero con ESP32-C3 para ponerse crema en todo el cuerpo sin ayuda.
 
 ### 📫 Contacto
 
