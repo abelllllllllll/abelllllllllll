@@ -27,7 +27,10 @@ Es un mango de PVC de unos 60 cm con una paleta blanda en la punta. Dentro, un p
 | [`docs/04_uso_calibracion_limpieza.md`](docs/04_uso_calibracion_limpieza.md) | Cargar firmware, uso, calibración y limpieza |
 | [`docs/05_precauciones.md`](docs/05_precauciones.md) | Seguridad eléctrica, calor, agua, piel |
 | [`docs/06_costes.md`](docs/06_costes.md) | Coste del prototipo y de producción en serie, con y sin moldes |
+| [`docs/07_prototipo_de_prueba.md`](docs/07_prototipo_de_prueba.md) | **Empieza aquí:** construir 1–2 unidades de prueba en 3 etapas, con compras, pruebas y decisión en cada una |
+| [`docs/08_hoja_de_resultados.md`](docs/08_hoja_de_resultados.md) | Hoja para imprimir y apuntar los resultados de cada prueba |
 | `firmware/aplicador_crema/` | Firmware para Arduino IDE (ESP32-C3), comentado en español |
+| `firmware/prueba_banco/` | Firmware de diagnóstico: mueve el motor, mide dosis y comprueba entradas desde el monitor serie |
 | `firmware/pruebas/` | Simulador que prueba el firmware en el PC (21 pruebas) |
 | `mecanica/aplicador.scad` | Diseño paramétrico en OpenSCAD + STL listos en `mecanica/stl/` |
 | `calculos/hidraulica.py` | Cálculo de presión y fuerza: por qué jeringa y no bomba peristáltica |

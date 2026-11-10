@@ -11,9 +11,9 @@
 | Filamento PETG (≈ 120 g) | ≈ 2 € |
 | Silicona de la paleta (25 ml) | ≈ 0,80 € |
 | **Total en piezas** | **≈ 61 €** |
-| **Lo que pagas de verdad la primera vez** (packs mínimos: kit de silicona, surtido de muelles, rodamientos, resistencias…) | **≈ 85 €** |
+| **Lo que pagas de verdad la primera vez** (packs mínimos: kit de silicona, surtido de muelles, rodamientos, resistencias…, más protoboard para probar y un motor de repuesto) | **≈ 100 €** (2 unidades: ≈ 130 €). Desglose por etapas en `07_prototipo_de_prueba.md` |
 
-Lo que sobra de los packs te vale para repuestos o para una segunda unidad, que costaría unos 35 € más.
+Lo que sobra de los packs te vale para repuestos o para una segunda unidad, que costaría unos 30 € más.
 
 **Si no tienes herramientas:** soldador, multímetro, pie de rey, broca escalonada y sierra, unos 60–70 €. **Sin impresora**, un servicio de impresión online cobra unos 25–40 € por todas las piezas.
 
