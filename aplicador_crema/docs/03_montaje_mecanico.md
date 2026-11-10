@@ -54,7 +54,7 @@ Los STL ya generados con las medidas típicas están en `mecanica/stl/`.
 
 ## Pasos
 
-1. **Tubo:** córtalo a la medida que indica OpenSCAD (≈ 511 mm), recto, y lija las rebabas. Apoya la plantilla en el extremo de abajo, marca y taladra: botones Ø12, LED Ø5, y luego los agujeros de los tornillos (M3 Ø2,6 y M4 Ø4,4) presentando cada pieza en su sitio.
+1. **Tubo:** córtalo a la medida que indica OpenSCAD (≈ 497 mm con tapón de PVC; 511 mm con la tapa impresa), recto, y lija las rebabas. Apoya la plantilla en el extremo de abajo, marca y taladra: botones Ø12, LED Ø5, y luego los agujeros de los tornillos (M3 Ø2,6 y M4 Ø4,4) presentando cada pieza en su sitio.
 2. **Jeringas (cartuchos):** recorta las aletas en círculo de Ø33 mm, con cúter y lima. Saca el vástago del émbolo girándolo y tirando: el tapón de goma se queda dentro. **Guarda un vástago** para colocar el tapón al rellenar.
 3. **Soporte del motor:**
    - Mete el N20 desde abajo (va justo de medida; una gota de pegamento si queda flojo) y pon el acoplador en su eje.
