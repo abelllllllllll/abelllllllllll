@@ -33,6 +33,7 @@
 ### 📂 Proyectos
 
 - 📊 [Analizador de datos](analisis_datos/) — le das un CSV o Excel y te regresa un reporte con hallazgos y gráficas.
+- 🧉 [Dispositivo automático de mate](dispositivo_mate/) — plan del primer prototipo para limpiar el mate y cargarle yerba nueva con un botón.
 
 ### 📫 Contacto
 
