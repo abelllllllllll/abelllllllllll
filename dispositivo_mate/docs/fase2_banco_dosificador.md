@@ -20,7 +20,7 @@ Si el sinfín sale con rebabas, lijalo: tiene que girar libre dentro del tubo (h
 
 ## Lo que hay que comprar para esta fase
 
-- 1 motorreductor **N20 de 6 V, ~100 rpm** (si podés, con **encoder**).
+- 1 motorreductor **N20 de 6 V, ~200 rpm** (a la tensión de la batería da ~150 rpm; si podés, con **encoder**).
 - 1 controlador **TB6612FNG** y 1 **ESP32-C3** (o, para empezar, una fuente de 3-6 V y un interruptor).
 - 3 tornillos **M3 × 12** (2 para el soporte del motor y 1 como eje del lado del fondo).
 - 2 precintos (para sujetar el tubo a la base).
@@ -38,10 +38,10 @@ Si el sinfín sale con rebabas, lijalo: tiene que girar libre dentro del tubo (h
 ## Prueba
 
 1. Cargá la tolva con yerba **hasta la mitad**.
-2. Hacé girar el motor **10 vueltas** (o 6 segundos a 100 rpm) y pesá. Repetí 3 veces.
+2. Hacé girar el motor **10 vueltas** (unos 4 segundos a 150 rpm) y pesá. Repetí 3 veces.
 3. Calculá **gramos por vuelta** = gramos / 10.
-4. Anotá el valor en `GRAMOS_POR_VUELTA_MEDIDO` de [`calculos/dosificador.py`](../calculos/dosificador.py) y corrélo: te dice cuántas vueltas dan 8 g.
-5. Hacé **10 dosis de 8 g** y pesá cada una. El script explica cómo sacar el CV (objetivo: **menos de 15 %**).
+4. Anotá el valor en `GRAMOS_POR_VUELTA_MEDIDO` de [`calculos/dosificador.py`](../calculos/dosificador.py) y corrélo: te dice cuántas vueltas dan 30 g.
+5. Hacé **10 dosis de 30 g** y pesá cada una. El script explica cómo sacar el CV (objetivo: **menos de 15 %**).
 6. Repetí con la tolva **casi vacía** y **llena**, y con **2-3 marcas** de yerba (con y sin palo).
 
 ## Qué anotar

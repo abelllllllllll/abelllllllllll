@@ -87,13 +87,32 @@ El plan lista **1 motor**, pero hay **dos mecanismos** (raspador y sinfín). Opc
 
 Según las fotos, el mate de referencia es un **camionero**: calabaza forrada (cuero o similar), **virola metálica ancha** con relieve y **base con patas**.
 
-| | Estimado de fotos | Medido |
+Medidas de camioneros en tiendas (cada mate es artesanal, así que varían):
+
+| Fuente | Diámetro | Alto | Otros datos |
+|---|---|---|---|
+| Pampa Direct, camionero grande | ~100 mm | ~130 mm | — |
+| YVY Mate, camionero | 100 mm | 115 mm | 250-350 ml, hasta 30 g de yerba |
+| YVY Mate, camionero | 105 mm | 120 mm | — |
+| Mate-tee.de, calabaza forrada | — | ~120 mm de profundidad | boca de ~70 mm |
+| Mate Pampa camionero térmico | 90 mm | 85 mm | ~40 g de yerba (modelo chico) |
+
+**Valores de diseño** (el caso más grande, para que entren todos):
+
+| | Valor | De dónde sale |
 |---|---|---|
-| Alto total (base a borde de virola) | ~130 mm | ? |
-| Diámetro exterior de la virola | ~95 mm | ? |
-| Diámetro interior de la boca | ~70 mm | ? |
-| Alto de la virola | ~25 mm | ? |
-| Ancho de la base con patas | ~65 mm | ? |
+| Alto total | 130 mm | Tiendas (máximo) |
+| Diámetro máximo | 105 mm | Tiendas (máximo) |
+| Boca interior | 70 mm | Tiendas |
+| Alto de la virola | 25 mm | Estimado de la foto (no se publica) |
+| Base con patas | 65 mm | Estimado de la foto (no se publica) |
+
+### ⚠️ La dosis cambia: 30 g, no 7-9 g
+
+Un camionero lleva **30-40 g** de yerba. Con 8 g quedaría casi vacío. Consecuencias:
+- **Dosificador:** el paso del sinfín sube de 18 a **24 mm** y el motor a ~150 rpm: **~0,95 g por vuelta, ~32 vueltas y ~13 s por dosis** (estimado).
+- **Tolva:** 570 cm³ ≈ 170 g ≈ **6 cebadas**. Para 20 harían falta ~600 g (2 litros de tolva), que no entran: la tolva se recarga cada ~6 usos.
+- **Residuos:** 30 g de yerba usada mojada son ~150-200 cm³ por ciclo. El cajón (~113 × 120 × 30 mm ≈ 400 cm³) se vacía **cada 2 ciclos**.
 
 **Lo bueno para el diseño:**
 - **Boca ancha (~70 mm)**: las paletas de limpieza entran fácil, mucho mejor que en una calabaza de boca chica.

@@ -12,7 +12,7 @@ import math
 # --- Sinfín (igual que en mecanica/dispositivo_mate.scad) ---
 SINFIN_D = 21.4      # mm
 NUCLEO_D = 9.0       # mm
-PASO = 18.0          # mm
+PASO = 24.0          # mm
 ALETA_ANG = 40       # grados
 
 # --- Yerba (MEDIR) ---
@@ -21,10 +21,10 @@ EFICIENCIA = 0.5        # fracción del volumen que realmente se llena (0,4-0,6)
 GRAMOS_POR_VUELTA_MEDIDO = None   # p. ej. 0.62 después de la prueba
 
 # --- Motor (MEDIR) ---
-RPM_MOTOR = 100         # N20 con reductora 1:150 a ~3,7 V
+RPM_MOTOR = 150         # N20 de 6 V ~200 rpm, a ~4 V da ~150 rpm (MEDIR)
 
 # --- Objetivo ---
-DOSIS_G = 8.0
+DOSIS_G = 30.0   # mate camionero: tiendas indican 30-40 g de yerba (el plan decía 7-9 g)
 
 # --- Tolva del equipo (volumen aproximado del concepto) ---
 TOLVA_CM3 = 116 * 41 * 134 / 1000 * 0.9  # equipo de 200 mm de alto   # caja trasera, menos 10 % de esquinas
@@ -52,7 +52,7 @@ def main():
     print("=== Cómo medir el CV (objetivo < 15 %) ===")
     print("Hacé 10 dosis seguidas, pesá cada una y calculá:")
     print("  CV = desviación estándar / promedio x 100")
-    ejemplo = [7.6, 8.3, 8.1, 7.4, 8.6, 7.9, 8.0, 8.4, 7.7, 8.2]
+    ejemplo = [28.5, 31.2, 30.4, 27.9, 32.1, 29.6, 30.0, 31.5, 28.8, 30.7]
     prom = sum(ejemplo) / len(ejemplo)
     desv = math.sqrt(sum((x - prom) ** 2 for x in ejemplo) / (len(ejemplo) - 1))
     print(f"  Ejemplo inventado {ejemplo}: promedio {prom:.2f} g, CV {desv / prom * 100:.1f} %")

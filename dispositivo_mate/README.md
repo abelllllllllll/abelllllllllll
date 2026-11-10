@@ -28,7 +28,9 @@ Plan de desarrollo del primer prototipo funcional.
 ### El mate de referencia
 
 Mate **camionero** con virola metálica ancha y base con patas (ver [revisión técnica](docs/revision_tecnica.md#el-mate-real-camionero)).
-Medidas **estimadas de fotos**: alto 130 mm, virola Ø95 mm, boca Ø70 mm. **Falta medirlo con regla.**
+Medidas tomadas de **tiendas** (caso más grande, para que entren todos): alto 130 mm, Ø105 mm, boca Ø70 mm.
+
+**Cambio importante:** un camionero lleva **30-40 g de yerba**, no 7-9 g. La dosis de diseño pasa a **30 g**.
 
 ### Cómo funciona el concepto
 
@@ -200,7 +202,7 @@ Cada pieza debe diseñarse teniendo en cuenta el montaje, las tolerancias, el de
 
 | Parámetro | Objetivo inicial |
 |---|---|
-| Dosificación | 7-9 g |
+| Dosificación | 7-9 g → **30 g** para mate camionero |
 | Variación de dosis | CV inferior al 15 % |
 | Tiempo de ciclo | inferior a 45 s |
 | Autonomía | mínimo 20 ciclos |

@@ -40,13 +40,13 @@ caja_r_esq   = 35;    // radio de las esquinas vistas desde arriba
 pared        = 3;
 
 // --- Mate (MEDÍ EL TUYO) ---
-// Valores ESTIMADOS de las fotos (mate camionero con virola ancha y base con patas).
-// Medilos con una regla y corregí.
-mate_d_max   = 95;    // diámetro máximo (virola o panza, el que sea mayor)
-mate_alto    = 130;   // alto total, de la base al borde de la virola
-mate_boca_d  = 70;    // diámetro interior de la boca
-mate_virola_alto = 25; // alto de la virola metálica
-mate_base_d  = 65;    // ancho de la base con patas
+// Mate camionero: medidas típicas de tiendas (ver docs/revision_tecnica.md).
+// Se usa el caso más grande para que entren todos. Si medís el tuyo, corregí.
+mate_d_max   = 105;   // diámetro máximo (tiendas: 100-105 mm)
+mate_alto    = 130;   // alto total (tiendas: 115-130 mm)
+mate_boca_d  = 70;    // diámetro interior de la boca (tiendas: ~70 mm)
+mate_virola_alto = 25; // alto de la virola (estimado de la foto: no se publica)
+mate_base_d  = 65;    // ancho de la base con patas (estimado de la foto)
 
 // --- Motorreductor N20 ---
 n20_ancho    = 12.2;  // cara de la reductora (Y)
@@ -61,7 +61,7 @@ tubo_di      = 23.0;  // interior del tubo donde gira el sinfín
 tubo_pared   = 2.4;
 sinfin_d     = 21.4;  // diámetro exterior del sinfín (1,6 mm de luz total)
 nucleo_d     = 9.0;   // núcleo central del sinfín
-paso         = 18.0;  // avance por vuelta
+paso         = 24.0;  // avance por vuelta (24 para dosis grandes de camionero)
 aleta_ang    = 40;    // grosor de la aleta en grados (=> paso*40/360 = 2 mm)
 cubo_largo   = 8.0;   // tramo liso del lado del motor
 sinfin_largo = 110.0; // largo total del sinfín
