@@ -23,11 +23,16 @@ Plan de desarrollo del primer prototipo funcional.
 |---|---|---|---|
 | Forma | Cilindro | Caja con esquinas redondeadas | **Caja con esquinas redondeadas** |
 | Base | Ø 80 mm | 176 × 176 mm | **176 × 176 mm** |
-| Alto | 120 mm | 133 mm | **160 mm** (para que entre el tobogán de yerba) |
+| Alto | 120 mm | 133 mm | **200 mm** (para que entre un mate camionero y el tobogán de yerba) |
+
+### El mate de referencia
+
+Mate **camionero** con virola metálica ancha y base con patas (ver [revisión técnica](docs/revision_tecnica.md#el-mate-real-camionero)).
+Medidas **estimadas de fotos**: alto 130 mm, virola Ø95 mm, boca Ø70 mm. **Falta medirlo con regla.**
 
 ### Cómo funciona el concepto
 
-1. El mate entra **boca abajo** sobre un aro de apoyo.
+1. El mate entra **boca abajo**, apoyado sobre la **virola**.
 2. Un rotor con **paletas de silicona** entra por la boca y gira: la yerba usada cae al **cajón de residuos**.
 3. El LED avisa que hay que **dar vuelta el mate** (único paso manual del MVP).
 4. Con el mate **boca arriba**, el **sinfín inclinado** lleva yerba desde la tolva de atrás hasta un tobogán que la deja en la boca.

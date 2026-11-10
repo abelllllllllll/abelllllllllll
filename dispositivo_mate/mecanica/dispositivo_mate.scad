@@ -34,15 +34,19 @@ $fn = 64;
 // --- Carcasa (del SketchUp original) ---
 caja_ancho   = 176;   // X
 caja_fondo   = 176;   // Y
-caja_alto    = 160;   // el original mide 133: no deja lugar para el tobogán
-                      // de yerba sobre la boca del mate (ver revisión técnica)   // Z
+caja_alto    = 200;   // el original mide 133. Con 133 no entra el tobogán de yerba
+                      // y con 160 no entra un mate camionero (ver revisión técnica)   // Z
 caja_r_esq   = 35;    // radio de las esquinas vistas desde arriba
 pared        = 3;
 
 // --- Mate (MEDÍ EL TUYO) ---
-mate_d_max   = 90;    // diámetro máximo (panza)
-mate_alto    = 85;    // alto total
-mate_boca_d  = 45;    // diámetro de la boca
+// Valores ESTIMADOS de las fotos (mate camionero con virola ancha y base con patas).
+// Medilos con una regla y corregí.
+mate_d_max   = 95;    // diámetro máximo (virola o panza, el que sea mayor)
+mate_alto    = 130;   // alto total, de la base al borde de la virola
+mate_boca_d  = 70;    // diámetro interior de la boca
+mate_virola_alto = 25; // alto de la virola metálica
+mate_base_d  = 65;    // ancho de la base con patas
 
 // --- Motorreductor N20 ---
 n20_ancho    = 12.2;  // cara de la reductora (Y)
@@ -280,12 +284,15 @@ module equipo(corte=false) {
             color("Tomato") translate([pozo_c[0], pozo_c[1], pared + 2]) {
                 cylinder(d=6, h=cajon_h + 45);
                 for (a=[0, 120, 240]) rotate([0, 0, a])
-                    translate([0, -1, cajon_h + 10]) cube([mate_boca_d/2 - 3, 2, 30]);
+                    translate([0, -1, cajon_h + 10]) cube([mate_boca_d/2 - 3, 2, mate_alto*0.55]);
             }
             // mate (fantasma, boca abajo)
             color("Sienna", 0.5) translate([pozo_c[0], pozo_c[1], pared + cajon_h + 5]) {
-                cylinder(d1=mate_boca_d, d2=mate_d_max, h=mate_alto*0.6);
-                translate([0, 0, mate_alto*0.6]) cylinder(d1=mate_d_max, d2=mate_d_max*0.6, h=mate_alto*0.4);
+                // boca abajo: primero la virola, después la panza y arriba la base
+                difference() { cylinder(d=mate_d_max, h=mate_virola_alto); translate([0,0,-1]) cylinder(d=mate_boca_d, h=mate_virola_alto + 2); }
+                translate([0, 0, mate_virola_alto]) cylinder(d1=mate_d_max - 4, d2=mate_base_d*0.7, h=(mate_alto - mate_virola_alto)*0.75);
+                translate([0, 0, mate_virola_alto + (mate_alto - mate_virola_alto)*0.75])
+                    cylinder(d1=mate_base_d*0.7, d2=mate_base_d, h=(mate_alto - mate_virola_alto)*0.25);
             }
             // tolva (atrás, arriba)
             color("Gainsboro", 0.8) translate([30, fondo_y, 55])

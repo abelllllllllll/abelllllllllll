@@ -38,7 +38,7 @@ También aparece la figura humana de ejemplo de SketchUp ("Ty"), que no es parte
 ## Qué se decidió
 
 - Se usa la **medida grande** del modelo (176 × 176 mm) en lugar de la del plan (Ø80 × 120 mm), porque en Ø80 no entra un mate.
-- El alto se subió de **133 a 160 mm** en el modelo paramétrico: con 133 mm no hay lugar para el tobogán de yerba sobre la boca del mate (ver [revisión técnica](revision_tecnica.md)).
+- El alto se subió de **133 a 200 mm** en el modelo paramétrico: con 133 mm no hay lugar para el tobogán de yerba sobre la boca, y el mate real (camionero, ~130 mm) necesita ~200 mm (ver [revisión técnica](revision_tecnica.md)).
 - Las dos medidas son parámetros (`caja_alto`, `caja_ancho`) en [`mecanica/dispositivo_mate.scad`](../mecanica/dispositivo_mate.scad).
 
 ## Para tener el modelo completo

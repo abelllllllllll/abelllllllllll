@@ -9,9 +9,9 @@ Los números son **estimaciones de referencia**: hay que medirlos con tu mate y 
 
 ### 1. El mate probablemente no entra en 8 × 12 cm
 
-> **Actualización:** se adoptó la medida del SketchUp (176 × 176 mm) y el alto se subió a **160 mm**.
+> **Actualización:** se adoptó la medida del SketchUp (176 × 176 mm). Con el mate real (camionero, ~130 mm) el alto pasa a **200 mm**.
 > Con 133 mm entra un mate de 85 mm, pero no queda lugar para que el sinfín y el tobogán dejen la yerba **por encima** de la boca.
-> El modelo avisa en la consola si tu mate entra (`mate_alto`). Con 160 mm entra un mate de hasta **~91 mm** de alto.
+> El modelo avisa en la consola si tu mate entra (`mate_alto`). Regla: **alto del equipo ≈ alto del mate + 70 mm**.
 
 - Un mate de calabaza o de cerámica típico mide unos **7-9 cm de ancho y 8-11 cm de alto**.
 - Con paredes de 2,5 mm, un cilindro de 8 cm deja **~7,5 cm de diámetro interior**.
@@ -66,7 +66,7 @@ El plan lista **1 motor**, pero hay **dos mecanismos** (raspador y sinfín). Opc
 - 1 dosis de 8 g ≈ **27 cm³**.
 - Con ~44 cm² de sección interior (diámetro de 7,5 cm): **cada dosis ocupa ~0,6 cm de altura**.
 - **20 dosis (160 g) ≈ 530 cm³ ≈ 12 cm de altura de tolva.** En Ø80 no entra: una tolva lleva **3-5 dosis**.
-- **Con el tamaño nuevo** (176 × 176 × 160 mm), la tolva trasera tiene ~400 cm³ ≈ **15 dosis** (ver `calculos/dosificador.py`).
+- **Con el tamaño nuevo** (176 × 176 × 200 mm), la tolva trasera tiene ~570 cm³ ≈ **22 dosis** (ver `calculos/dosificador.py`).
 
 ### Depósito de residuos
 - La yerba usada absorbe agua: 8 g secos pueden ser **25-30 g húmedos** y unos **40-60 cm³**.
@@ -83,8 +83,32 @@ El plan lista **1 motor**, pero hay **dos mecanismos** (raspador y sinfín). Opc
 
 ---
 
+## El mate real (camionero)
+
+Según las fotos, el mate de referencia es un **camionero**: calabaza forrada (cuero o similar), **virola metálica ancha** con relieve y **base con patas**.
+
+| | Estimado de fotos | Medido |
+|---|---|---|
+| Alto total (base a borde de virola) | ~130 mm | ? |
+| Diámetro exterior de la virola | ~95 mm | ? |
+| Diámetro interior de la boca | ~70 mm | ? |
+| Alto de la virola | ~25 mm | ? |
+| Ancho de la base con patas | ~65 mm | ? |
+
+**Lo bueno para el diseño:**
+- **Boca ancha (~70 mm)**: las paletas de limpieza entran fácil, mucho mejor que en una calabaza de boca chica.
+- **Virola plana y rígida**: es el apoyo ideal para poner el mate **boca abajo**. El aro de apoyo se diseña para que la virola apoye en todo su borde.
+- **Base con patas**: boca arriba se queda firme para cargar la yerba.
+
+**Lo que complica:**
+- **Es alto**: por eso el equipo pasa a 200 mm de alto.
+- **Forro de cuero**: no debe mojarse ni rasparse. Las paletas trabajan solo por adentro y el aro de apoyo toca solo la virola.
+- **El borde de la virola junta yerba** (se ve en la foto, sobre todo en las letras en relieve). Conviene un **cepillo fijo** en el aro que limpie el borde mientras el rotor gira.
+- **Yerba con mucho polvo y palo**: probar el dosificador con esta yerba. El polvo puede pasar por la luz entre el sinfín y el tubo.
+- Hay mates camioneros de muchos tamaños: el aro de apoyo debería ser **intercambiable** (un aro por tamaño de virola).
+
 ## ✅ Qué falta
 
-1. **Medidas de tu mate**: diámetro de la boca, diámetro máximo, alto y material. Cargalas en `mate_*` del `.scad`.
+1. **Medir el mate con regla** (la tabla de arriba) y cargar las medidas en `mate_*` del `.scad`.
 2. **Imprimir y probar el dosificador** ([Fase 2](fase2_banco_dosificador.md)).
 3. Con los resultados, diseñar el **rotor de limpieza** (Fase 3) y probarlo con yerba húmeda.

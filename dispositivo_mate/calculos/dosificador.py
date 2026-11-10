@@ -27,7 +27,7 @@ RPM_MOTOR = 100         # N20 con reductora 1:150 a ~3,7 V
 DOSIS_G = 8.0
 
 # --- Tolva del equipo (volumen aproximado del concepto) ---
-TOLVA_CM3 = 116 * 41 * 94 / 1000 * 0.9   # caja trasera, menos 10 % de esquinas
+TOLVA_CM3 = 116 * 41 * 134 / 1000 * 0.9  # equipo de 200 mm de alto   # caja trasera, menos 10 % de esquinas
 
 
 def main():
