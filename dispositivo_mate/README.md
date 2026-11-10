@@ -2,44 +2,46 @@
 
 Plan de desarrollo del primer prototipo funcional.
 
-> Estado: **Fase 2 lista para imprimir** (banco de prueba del dosificador).
-> Hay un concepto del equipo completo, pero todavía no hay firmware ni pruebas reales.
+> Estado: **equipo v1 genérico diseñado** (todas las piezas, lista de materiales, conexiones y firmware).
+> **Nada está probado todavía.** El siguiente paso es imprimir y probar el rotor de limpieza y el dosificador.
 
-![Concepto del equipo en corte](mecanica/imagenes/equipo_corte.png)
+![Equipo v1 en corte](mecanica/imagenes/v1_corte.png)
 
-| Archivo | Qué contiene |
+## Equipo v1 (genérico, para todos los mates)
+
+Dos estaciones, como una cafetera: a la **izquierda** el mate va **boca abajo** sobre un asiento cónico
+y un rotor con paletas de TPU saca la yerba usada al cajón; a la **derecha** va **boca arriba** y un
+sinfín inclinado le deja **30 g** de yerba nueva.
+
+| | |
 |---|---|
-| [`README.md`](README.md) | El plan completo del proyecto (este archivo) |
-| [`docs/revision_tecnica.md`](docs/revision_tecnica.md) | Riesgos detectados, números de referencia y cambios sugeridos |
+| Medidas | **270 × 230 × 220 mm** (ancho × fondo × alto), dos módulos atornillados |
+| Mates compatibles | boca o virola de **Ø40 a Ø124 mm**, hasta **130 mm** de alto |
+| Dosis | **30 g** (configurable), ~13 s |
+| Tolva | ~510 cm³ ≈ **5 cebadas** |
+| Batería | 2 × 18650 (2S), carga por USB-C |
+| Costo del prototipo | **≈ 100-135 €** |
+
+| Documento | Qué contiene |
+|---|---|
+| [`docs/v1/viabilidad_y_produccion.md`](docs/v1/viabilidad_y_produccion.md) | **¿Es viable?** y qué falta para producirlo |
+| [`docs/v1/lista_materiales.md`](docs/v1/lista_materiales.md) | Qué comprar, con precios orientativos |
+| [`docs/v1/conexiones.md`](docs/v1/conexiones.md) | Pines, alimentación y seguridad |
+| [`docs/v1/montaje.md`](docs/v1/montaje.md) | Cómo imprimir cada pieza y armar el equipo |
+| [`firmware/`](firmware/) | Programa del ESP32-C3 |
+| [`mecanica/equipo_v1.scad`](mecanica/equipo_v1.scad) | Modelo 3D paramétrico del equipo v1 |
+| [`mecanica/stl_v1/`](mecanica/stl_v1/) | Piezas del equipo v1 listas para imprimir |
+| [`docs/fase2_banco_dosificador.md`](docs/fase2_banco_dosificador.md) | Banco de prueba del dosificador (se puede imprimir ya) |
+| [`mecanica/dispositivo_mate.scad`](mecanica/dispositivo_mate.scad) · [`mecanica/stl/`](mecanica/stl/) | Piezas del banco de prueba |
+| [`calculos/dosificador.py`](calculos/dosificador.py) | Gramos por vuelta, tiempo de dosis, tolva y CV |
+| [`docs/revision_tecnica.md`](docs/revision_tecnica.md) | Riesgos detectados y decisiones tomadas |
 | [`docs/modelo_original.md`](docs/modelo_original.md) | Medidas sacadas del SketchUp original |
-| [`docs/fase2_banco_dosificador.md`](docs/fase2_banco_dosificador.md) | Cómo imprimir, armar y probar el dosificador |
-| [`mecanica/dispositivo_mate.scad`](mecanica/dispositivo_mate.scad) | Modelo 3D paramétrico (OpenSCAD): piezas y concepto del equipo |
-| [`mecanica/stl/`](mecanica/stl/) | Piezas del dosificador listas para imprimir |
-| [`calculos/dosificador.py`](calculos/dosificador.py) | Gramos por vuelta, tiempo de dosis, capacidad de la tolva y CV |
 
-### Medidas actuales del diseño
-
-| | Plan original | SketchUp | **Diseño actual** |
-|---|---|---|---|
-| Forma | Cilindro | Caja con esquinas redondeadas | **Caja con esquinas redondeadas** |
-| Base | Ø 80 mm | 176 × 176 mm | **176 × 176 mm** |
-| Alto | 120 mm | 133 mm | **200 mm** (para que entre un mate camionero y el tobogán de yerba) |
-
-### El mate de referencia
-
-Mate **camionero** con virola metálica ancha y base con patas (ver [revisión técnica](docs/revision_tecnica.md#el-mate-real-camionero)).
-Medidas tomadas de **tiendas** (caso más grande, para que entren todos): alto 130 mm, Ø105 mm, boca Ø70 mm.
-
-**Cambio importante:** un camionero lleva **30-40 g de yerba**, no 7-9 g. La dosis de diseño pasa a **30 g**.
-
-### Cómo funciona el concepto
-
-1. El mate entra **boca abajo**, apoyado sobre la **virola**.
-2. Un rotor con **paletas de silicona** entra por la boca y gira: la yerba usada cae al **cajón de residuos**.
-3. El LED avisa que hay que **dar vuelta el mate** (único paso manual del MVP).
-4. Con el mate **boca arriba**, el **sinfín inclinado** lleva yerba desde la tolva de atrás hasta un tobogán que la deja en la boca.
+![Despiece del equipo v1](mecanica/imagenes/v1_explotado.png)
 
 ---
+
+# Plan original
 
 ## 1. Objetivo del proyecto
 

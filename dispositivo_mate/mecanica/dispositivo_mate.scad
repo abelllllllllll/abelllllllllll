@@ -250,7 +250,7 @@ module banco_prueba() {
 }
 
 // ============================================================================
-//  CONCEPTO DEL EQUIPO COMPLETO (volúmenes, no piezas finales)
+//  CONCEPTO VIEJO (reemplazado por equipo_v1.scad, que es el diseño actual)
 // ============================================================================
 //  Idea de funcionamiento (resuelve "limpiar boca abajo / cargar boca arriba"):
 //   1. El mate entra BOCA ABAJO en el pozo, sobre un aro de apoyo.
