@@ -2,7 +2,7 @@
 
 ![Conjunto en corte](../mecanica/imagenes/conjunto_corte.png)
 
-De abajo arriba: **tapa inferior** (USB-C e interruptor) → **trineo** con el TP4056, la batería y la placa → **soporte del motor** (N20, acoplador, rodamiento y final de carrera) → **carro con tubo empujador** → **jeringa de 60 ml** → **tapa superior con brazo a 45° y cabeza con sensor** → **paleta flotante**.
+De abajo arriba: **tapón de PVC** (USB-C e interruptor) → **trineo** con el TP4056, la batería y la placa → **soporte del motor** (N20, acoplador, rodamiento y final de carrera) → **carro con tubo empujador** → **jeringa de 60 ml** → **tapa superior con brazo a 45° y cabeza con sensor** → **paleta flotante**.
 
 ## Cabeza con sensor de contacto
 
@@ -25,10 +25,11 @@ El empuje se transmite así: tapón → crema → hombro de la jeringa → tapa 
 `mecanica/aplicador.scad` es paramétrico. **Antes de imprimir, mide con el pie de rey tu tubo, tu jeringa, tu motor y tu acoplador**, y corrige la sección `MEDIDAS`. Al renderizar, la consola de OpenSCAD te dice:
 
 ```
-=== CORTAR TUBO PVC Ø40 A: 511 mm
+=== CORTAR TUBO PVC Ø40 A: 497 mm
 === VARILLA M5 INOX: 153 mm   VARILLA GUÍA Ø4: 134 mm
 === RECORRIDO_MAX_MM para el firmware: 106
-=== AGUJEROS EN EL PVC (desde el extremo de abajo): DOSIS Ø12 a 165 mm, LED Ø5 a 152 mm, RETRAER Ø12 a 140 mm
+=== AGUJEROS EN EL PVC (desde el extremo de abajo): DOSIS Ø12 a 151 mm, LED Ø5 a 138 mm, RETRAER Ø12 a 126 mm
+=== CABLE DEL SENSOR: agujero Ø4 por la cara trasera a 160 mm
 ```
 
 Además lleva comprobaciones automáticas (`assert`) que avisan si alguna medida hace que dos piezas choquen.
@@ -43,8 +44,11 @@ Los STL ya generados con las medidas típicas están en `mecanica/stl/`.
 | `carro` | PETG | De pie, con el tubo hacia arriba | 6 perímetros (las tuercas M5 van a presión) |
 | `tapa_superior` | PETG | Tumbada de lado | Con soportes, por el codo del brazo |
 | `trineo` | PETG | Con la bandeja apoyada en la cama | — |
-| `tapa_inferior` | PETG | Con el reborde abajo | — |
-| `paleta` | **TPU 95A** | Con la cara de aplicación abajo | 3 perímetros, 25 % de relleno; queda blanda |
+| `plantilla_tapon` | PLA o PETG | Plana | Para taladrar el tapón de PVC (opción recomendada) |
+| `tapa_inferior` | PETG | Con el reborde abajo | Solo si eliges la tapa impresa (`tapa_inferior_tipo = "impresa"`) |
+| `alma_paleta` | PETG | Con la placa abajo | 100 % de relleno. Es el esqueleto rígido de la paleta de silicona |
+| `molde_paleta_base` + `molde_paleta_tapa` | PETG | Planas | Se imprimen una vez y sirven para cientos de paletas |
+| `paleta` | TPU 95A | Con la cara de aplicación abajo | **Alternativa** a la paleta de silicona: más rápida, pero menos lisa e higiénica |
 | `plantilla_taladro` | PLA o PETG | — | Solo sirve para marcar los agujeros |
 | `pinza_cable` (×3) | PETG | De pie | Sujetan el cable del sensor por fuera del tubo |
 
@@ -61,14 +65,31 @@ Los STL ya generados con las medidas típicas están en `mecanica/stl/`.
 4. **Carro:** mete una tuerca M5 a presión en cada hexágono, de arriba y de abajo (con calor del soldador si cuesta). Enróscalo en la varilla, con la guía pasando por su agujero.
 5. **Lubrica** la varilla con grasa de silicona.
 6. **Trineo:** sujeta con bridas el portapilas, el TP4056 (con el USB-C hacia abajo, alineado con la ventana de la tapa) y la placa. Pasa los cables por el canal de la pared.
-7. **Montaje en el tubo:** monta los botones y el LED en el tubo. Mete el trineo y la tapa inferior por abajo, y el soporte del motor con el carro por arriba, hasta su sitio. Fíjalos con los M3.
-8. **Tapa superior y sensor:**
+7. **Tapón de PVC:** mete la `plantilla_tapon` dentro del tapón, apoyada en el fondo. Taladra desde dentro los agujeros guía de 2 mm y luego agrándalos: Ø6,4 el del interruptor y Ø3 el de los LED. La ventana del USB-C se abre taladrando sus 4 esquinas con broca de 3 mm y limando hasta 9,8 × 3,9 mm. Monta el interruptor general con su tuerca.
+8. **Montaje en el tubo:** monta los botones y el LED en el tubo. Mete el trineo por abajo, con el TP4056 **pegado al fondo** para que el USB-C quede justo detrás de la ventana del tapón. Pon el tapón, alineando la ventana con el conector, y fíjalo con un tornillo M3 lateral (así se puede quitar para cambiar la batería). Mete el soporte del motor con el carro por arriba, y el soporte del motor con el carro por arriba, hasta su sitio. Fíjalos con los M3.
+9. **Tapa superior y sensor:**
    - Pasa los cables del microinterruptor por su canal del brazo, empujándolos desde la cabeza hasta que salgan por el lateral del collarín. Si cuesta, guíalos con un alambre fino.
    - Mete el microinterruptor en su alojamiento con la palanca hacia fuera y fíjalo con una gota de silicona neutra o epoxi.
    - Pasa el tubo de silicona por el canal central del brazo (con jabón entra mejor) y deja que asome unos 15 mm por cada lado.
    - Mete el muelle en el fondo del zócalo y el tubo de silicona 10 mm en el cuello de la paleta. Empuja la paleta en el zócalo, con la ranura del cuello hacia el agujero del M2, y enrosca el tornillo M2 hasta que toque. Luego **aflójalo media vuelta**: la paleta debe deslizar suave y volver sola.
    - **Ajuste:** con la paleta en reposo, el interruptor **no** debe hacer clic. Al hundirla unos 2 mm, sí. Si no hace clic, dobla un poco la palanca hacia fuera. Si hace clic sin apoyar, dóblala hacia dentro.
-9. **Cable por fuera:** baja el cable por la cara trasera del tubo (la opuesta a los botones) con las 3 pinzas y mételo por el agujero de Ø4 (ver `02_esquema_conexiones.md`).
+10. **Cable por fuera:** baja el cable por la cara trasera del tubo (la opuesta a los botones) con las 3 pinzas y mételo por el agujero de Ø4 (ver `02_esquema_conexiones.md`).
+
+## Paleta de silicona colada (recomendada)
+
+![Molde de la paleta](../mecanica/imagenes/molde_paleta.png)
+
+La paleta tiene un **alma rígida de PETG** (cuello, placa trasera y tubo de salida) recubierta de **silicona de platino apta para piel**. La cara que toca la piel queda lisa y sin poros, y el cuello sigue siendo rígido para deslizar en la cabeza.
+
+1. **Prueba primero** una gota de silicona sobre un trozo impreso del mismo filamento. Algunas marcas de filamento impiden que la silicona de platino cure y la dejan pegajosa. Si pasa, pinta el molde con barniz acrílico transparente.
+2. Pon desmoldeante (spray o una capa finísima de vaselina) en la base y en la tapa del molde. **No pongas en el alma**: ahí interesa que la silicona agarre.
+3. Mezcla 30 g de silicona, partes A y B según el fabricante, removiendo despacio para no meter aire. Si tienes, desgasifica 2 minutos.
+4. Vierte la silicona en la base del molde, desde poca altura, hasta unos 3 mm del borde.
+5. Mete el alma con el cuello hacia arriba, inclinándola un poco para que no atrape aire, hasta que el pasador central entre en su tubo. Pon la tapa encima, con el cuello pasando por el agujero central y los pasadores en sus agujeros. Aprieta: el sobrante sale por los respiraderos.
+6. Pon un peso encima y deja curar el tiempo que diga el fabricante (normalmente 4–24 h a temperatura ambiente).
+7. Desmolda, corta las rebabas de los respiraderos con tijera y lava la paleta con agua y jabón.
+
+Una paleta usa 25 ml de silicona (≈ 0,80 €). Sale cada día del molde una paleta, o más si imprimes varios moldes.
 
 ## Cambiar o rellenar la jeringa
 

@@ -15,7 +15,7 @@ Es un mango de PVC de unos 60 cm con una paleta blanda en la punta. Dentro, un p
 - **Batería** de una celda 18650 que se carga por USB-C, con aviso de batería baja.
 - Sabe cuándo está **vacía la jeringa**, y las jeringas se cambian como cartuchos.
 - Todo funciona a **3–4,2 V**. Nada calienta.
-- Coste: **≈ 59 €** en piezas.
+- Coste: **≈ 61 €** en piezas por unidad. En serie, sin moldes de inyección, sale **≈ 40 €** a 1.000 unidades (ver [`docs/06_costes.md`](docs/06_costes.md)).
 
 ## Contenido
 
@@ -26,6 +26,7 @@ Es un mango de PVC de unos 60 cm con una paleta blanda en la punta. Dentro, un p
 | [`docs/03_montaje_mecanico.md`](docs/03_montaje_mecanico.md) | Impresión 3D, cortes, taladros y montaje |
 | [`docs/04_uso_calibracion_limpieza.md`](docs/04_uso_calibracion_limpieza.md) | Cargar firmware, uso, calibración y limpieza |
 | [`docs/05_precauciones.md`](docs/05_precauciones.md) | Seguridad eléctrica, calor, agua, piel |
+| [`docs/06_costes.md`](docs/06_costes.md) | Coste del prototipo y de producción en serie, con y sin moldes |
 | `firmware/aplicador_crema/` | Firmware para Arduino IDE (ESP32-C3), comentado en español |
 | `firmware/pruebas/` | Simulador que prueba el firmware en el PC (21 pruebas) |
 | `mecanica/aplicador.scad` | Diseño paramétrico en OpenSCAD + STL listos en `mecanica/stl/` |
@@ -36,7 +37,7 @@ Es un mango de PVC de unos 60 cm con una paleta blanda en la punta. Dentro, un p
 **Verificado sin el aparato físico:**
 - El firmware **compila para ESP32-C3** (Arduino-ESP32 3.1.3) sin errores ni avisos.
 - El firmware pasa **21/21 pruebas** en un simulador que imita botones con rebotes, sensor de contacto, motor, husillo, jeringa, batería, memoria y sueño profundo.
-- Las 8 piezas 3D **se generan sin errores** y con mallas cerradas (comprobado). El diseño comprueba solo que no haya interferencias entre piezas.
+- Las 12 piezas 3D (incluidos el molde de la paleta de silicona y las plantillas de taladro) **se generan sin errores** y con mallas cerradas (comprobado). El alma de la paleta encaja en el molde sin interferencias (comprobado). El diseño comprueba solo que no haya interferencias entre piezas.
 - El cálculo hidráulico cubre cremas desde loción espesa hasta bálsamo denso.
 
 **Pendiente de comprobar con las piezas reales:** las medidas exactas de tu jeringa, tubo, motor y microinterruptor (se ajustan en el `.scad`), la viscosidad de tu crema, el ajuste fino de la palanca del sensor y la calibración de la dosis (10 minutos, explicada en la documentación).

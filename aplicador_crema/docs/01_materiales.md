@@ -1,6 +1,6 @@
 # 1. Lista de materiales (final)
 
-Precios orientativos de AliExpress, noviembre de 2026. En Amazon.es suelen ser entre 1,5 y 2 veces más caros. **Total ≈ 59 €** sin contar el filamento de impresión, del que se usan unos 2 € (≈ 90 g de PETG y 20 g de TPU).
+Precios orientativos de AliExpress, noviembre de 2026. En Amazon.es suelen ser entre 1,5 y 2 veces más caros. **Total ≈ 61 €** en piezas, contando el filamento (≈ 2 €, unos 120 g de PETG) y la silicona de la paleta (≈ 0,80 € por paleta). La primera vez se gasta algo más, porque varias cosas solo se venden en packs: el kit de silicona son unos 18 €, pero da para unas 15–20 paletas. Ver `06_costes.md`.
 
 ## Electrónica
 
@@ -33,8 +33,11 @@ Precios orientativos de AliExpress, noviembre de 2026. En Amazon.es suelen ser e
 | M8 | Tubo de crema | Tubo de **silicona curada con platino, grado alimentario**, 6 × 9 mm, 1 m | 1 | 4 |
 | M8b | Muelle de la paleta | Muelle de compresión **inox**, Ø exterior ≤ 12 mm, Ø interior ≥ 9,5 mm, largo ≈ 10 mm, hilo 0,5 mm. Se encuentra en los surtidos de muelles (`surtido muelles compresión inox`) | 1 | 1 |
 | M8c | Pasador de la paleta | 1 tornillo M2 × 16 inox | 1 | — |
+| M8d | Tapa inferior | **Tapón de PVC Ø40** de evacuación (hembra, encaja por fuera del tubo), de ferretería | 1 | 0,5 |
+| M8e | Paleta | **Silicona de platino apta para contacto con piel**, dureza Shore 20–30A (`silicona platino shore 25A grado alimentario`), kit A+B de 500 g. Cada paleta usa 25 ml | 1 kit | 18 |
+| M8f | Desmoldeante | Desmoldeante en spray para silicona, o una capa finísima de vaselina | 1 | 4 |
 | M9 | Lubricante | Grasa de silicona **grado alimentario** (para la rosca y el tapón de goma) | 1 | 3 |
-| M10 | Impresión 3D | PETG (piezas rígidas) + TPU 95A (paleta). Si no tienes impresora, sirve cualquier servicio de impresión online con los STL de `mecanica/stl/` | — | (2) |
+| M10 | Impresión 3D | PETG para todas las piezas, incluidos el alma de la paleta y su molde. TPU 95A solo si eliges la paleta impresa en lugar de la de silicona. Si no tienes impresora, sirve cualquier servicio de impresión online con los STL de `mecanica/stl/` | — | (2) |
 
 **Herramienta:** soldador (con estaño y flux), multímetro, pie de rey, sierra para PVC, broca escalonada (5 y 12 mm), broca de 4 mm, destornilladores y llave de 8 mm.
 

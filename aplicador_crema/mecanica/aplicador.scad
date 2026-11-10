@@ -15,6 +15,7 @@
 
 // "conjunto" | "conjunto_corte" | "tapa_superior" | "paleta" | "carro"
 // | "soporte_motor" | "trineo" | "tapa_inferior" | "plantilla_taladro" | "pinza_cable"
+// | "alma_paleta" | "molde_paleta_base" | "molde_paleta_tapa" | "plantilla_tapon"
 pieza = "conjunto_corte";
 corte_y = 0;   // solo para la vista "cabeza_corte"
 
@@ -63,7 +64,11 @@ $fn = 64;
 // ============================================================================
 //  COTAS DERIVADAS (no tocar: se calculan solas)
 // ============================================================================
-tapa_inf_h = 15;      // tapón inferior
+// Tapa inferior: "pvc" = tapón de PVC Ø40 de ferretería, solo taladrado (más barato,
+// recomendado) | "impresa" = pieza impresa tapa_inferior
+tapa_inferior_tipo = "pvc";
+tapon_pvc_fondo = 3;  // grosor del fondo del tapón de PVC (mídelo)
+tapa_inf_h = tapa_inferior_tipo == "pvc" ? 1 : 15;   // espacio que ocupa dentro del tubo
 trineo_l   = 165;     // bandeja de electrónica
 soporte_h  = n20_largo + (acopl_largo + 6) + 4 + 10;  // motor + cámara acoplador + escalón + rodamiento y tuerca
 carro_h    = 16;
@@ -308,6 +313,80 @@ module paleta() {
 }
 
 // ============================================================================
+//  4c) PALETA DE SILICONA COLADA (alternativa recomendada a la de TPU)
+//     Un "alma" rígida impresa en PETG (cuello + placa trasera + tubo de
+//     salida) y alrededor silicona de platino apta para piel, colada en un
+//     molde impreso de 2 piezas. La cara que toca la piel queda lisa, sin los
+//     poros de la impresión, y el cuello sigue siendo rígido para deslizar.
+// ============================================================================
+alma_placa_e = 2;
+alma_placa   = [pal_l / 2 - 15, pal_a / 2 - 12.5];   // semiejes de la placa trasera
+alma_agujeros = [[21, 0], [-21, 0], [14, 9], [-14, 9], [14, -9], [-14, -9], [0, -12]];
+molde_borde = 8;  molde_fondo = 4;  molde_tapa_e = 4;
+molde_L = pal_l + 2 * molde_borde;  molde_A = pal_a + 2 * molde_borde;
+
+module cuerpo_paleta(extra = 0) {
+  hull() {
+    scale([pal_l / 2, pal_a / 2, 1]) cylinder(r = 1, h = 2.5, $fn = 96);
+    scale([pal_l / 2 - 12, pal_a / 2 - 10, 1]) cylinder(r = 1, h = pal_e + extra, $fn = 96);
+  }
+}
+
+module alma_paleta() {
+  zp = pal_e + hueco_reposo - z_pasador;
+  difference() {
+    union() {
+      // placa trasera: queda vista y es la que pisa el microinterruptor
+      translate([0, 0, pal_e - alma_placa_e])
+        scale([alma_placa[0], alma_placa[1], 1]) cylinder(r = 1, h = alma_placa_e, $fn = 96);
+      // cuello rígido que desliza en la cabeza
+      translate([0, 0, pal_e - 0.01]) cylinder(d = cuello_d, h = cuello_l);
+      // tubo de salida hasta 3 mm de la cara, con anillo de anclaje
+      translate([0, 0, 3]) cylinder(d = 9, h = pal_e - 3);
+      translate([0, 0, 4.5]) cylinder(d = 11.5, h = 1.2);
+    }
+    translate([0, 0, pal_e + cuello_l - 10]) cylinder(d = sil_de - 0.4, h = 11);
+    translate([0, 0, 2]) cylinder(d = 6, h = pal_e + cuello_l - 9);
+    // ranura del pasador (igual que en la paleta de TPU)
+    translate([cuello_d / 2 - 1.0, -1.15, zp - hueco_reposo - 1.1]) cube([2, 2.3, hueco_reposo + 2.2]);
+    // agujeros por los que pasa la silicona y la "remacha" a la placa
+    for (h = alma_agujeros) translate([h[0], h[1], pal_e - alma_placa_e - 1]) cylinder(d = 3.5, h = 4);
+  }
+}
+
+// Base del molde: la paleta con la cara de aplicación hacia abajo
+module molde_paleta_base() {
+  H = molde_fondo + pal_e;
+  difference() {
+    translate([-molde_L / 2, -molde_A / 2, 0]) cube([molde_L, molde_A, H]);
+    translate([0, 0, molde_fondo]) cuerpo_paleta(1);
+  }
+  translate([0, 0, molde_fondo - 0.01]) {
+    // los surcos de la cara son nervios en el molde
+    for (a = [0, 90, 180, 270]) rotate([0, 0, a]) translate([6, -1.5, 0]) cube([pal_l / 2 - 16, 3, 1.2]);
+    // abocardado de salida + pasador que tapona el tubo del alma (entra 3 mm)
+    cylinder(d1 = 12, d2 = 6, h = 3);
+    cylinder(d = 5.7, h = 6);
+  }
+  // pasadores de centrado de la tapa
+  for (sx = [-1, 1]) translate([sx * (molde_L / 2 - 4), 0, H - 0.01]) cylinder(d = 4, h = 3.5);
+}
+
+// Tapa del molde: sujeta el alma centrada y a su altura; su cara de abajo es la
+// trasera de la paleta. Los respiraderos dejan salir el aire y la silicona sobrante.
+module molde_paleta_tapa() {
+  difference() {
+    translate([-molde_L / 2, -molde_A / 2, 0]) cube([molde_L, molde_A, molde_tapa_e]);
+    translate([0, 0, -1]) cylinder(d = cuello_d + 0.3, h = molde_tapa_e + 2);
+    for (sx = [-1, 1]) translate([sx * (molde_L / 2 - 4), 0, -1]) cylinder(d = 4.4, h = molde_tapa_e + 2);
+    // respiraderos: en el anillo de silicona alrededor de la placa y sobre sus agujeros
+    for (v = concat([[29, 0], [-29, 0], [0, 18.8], [0, -18.8], [20, 13], [-20, 13], [20, -13], [-20, -13]],
+                    alma_agujeros))
+      translate([v[0], v[1], -1]) cylinder(d = 2.5, h = molde_tapa_e + 2);
+  }
+}
+
+// ============================================================================
 //  4b) PINZA PARA EL CABLE DEL SENSOR (por fuera del tubo, imprimir 3)
 // ============================================================================
 module pinza_cable() {
@@ -355,20 +434,42 @@ module trineo() {
 // ============================================================================
 //  6) TAPA INFERIOR (USB-C de carga + interruptor general)
 // ============================================================================
+// Agujeros de la tapa (los mismos para la tapa impresa y para el tapón de PVC)
+module agujeros_tapa(h) {
+  // ventana del USB-C del TP4056 (va centrado sobre la bandeja)
+  translate([-4.9, -6 - 1.6 + 2.5 + 1.2, -1]) cube([9.8, 3.9, h + 2]);
+  // ventanilla para ver los LED de carga
+  translate([4, -6 + 2.5, -1]) cylinder(d = 3, h = h + 2);
+  // interruptor general de palanca mini (rosca Ø6) en la mitad de arriba
+  translate([0, 9, -1]) cylinder(d = 6.4, h = h + 2);
+}
+
+// Plantilla para taladrar el TAPÓN DE PVC: se mete dentro del tapón, apoyada en
+// el fondo, y se taladra desde dentro (agujeros guía de 2 mm; la ventana del
+// USB-C se marca con sus 4 esquinas y se abre con broca de 3 mm y lima).
+module plantilla_tapon() {
+  e = 3;
+  difference() {
+    union() {
+      cylinder(d = tubo_de - 0.3, h = e);
+      translate([-3, tubo_de / 2 - 8, 0]) cube([6, 10, e + 8]);   // asa (marca el lado +Y)
+    }
+    translate([0, 9, -1]) cylinder(d = 2, h = e + 2);
+    translate([4, -6 + 2.5, -1]) cylinder(d = 2, h = e + 2);
+    for (x = [-4.9 + 1, 4.9 - 1]) for (y = [-6 - 1.6 + 2.5 + 1.2 + 0.8, -6 - 1.6 + 2.5 + 1.2 + 3.9 - 0.8])
+      translate([x, y, -1]) cylinder(d = 1.5, h = e + 2);
+  }
+}
+
 module tapa_inferior() {
   difference() {
     union() {
       translate([0, 0, 0]) cylinder(d = tubo_de, h = 4);
-      translate([0, 0, 4 - 0.01]) tapon(tubo_di, tapa_inf_h - 4);
+      translate([0, 0, 4 - 0.01]) tapon(tubo_di, 15 - 4);
     }
-    // ventana del USB-C del TP4056 (va centrado sobre la bandeja)
-    translate([-4.9, -6 - 1.6 + 2.5 + 1.2, -1]) cube([9.8, 3.9, tapa_inf_h + 2]);
-    // ventanilla para ver los LED de carga
-    translate([4, -6 + 2.5, -1]) cylinder(d = 3, h = tapa_inf_h + 2);
-    // interruptor general de palanca mini (rosca Ø6) en la mitad de arriba
-    translate([0, 9, -1]) cylinder(d = 6.4, h = tapa_inf_h + 2);
+    agujeros_tapa(15);
     // hueco interior para cables y para la palanca
-    translate([0, 9, 3]) cylinder(d = 13, h = tapa_inf_h);
+    translate([0, 9, 3]) cylinder(d = 13, h = 15);
     agujero_m3_radial(9, 90);
   }
 }
@@ -448,7 +549,11 @@ module cortar(corte) {
 
 module conjunto(corte = false) {
   cortar(corte) tubo_pvc();
-  color("orange") tapa_inferior();
+  if (tapa_inferior_tipo == "impresa") color("orange") tapa_inferior();
+  else color("dimgray") translate([0, 0, -tapon_pvc_fondo]) difference() {     // tapón de PVC
+    cylinder(d = tubo_de + 4.4, h = tapon_pvc_fondo + 22);
+    translate([0, 0, tapon_pvc_fondo]) cylinder(d = tubo_de + 0.2, h = 30);
+  }
   color("orange") translate([0, 0, tapa_inf_h]) trineo();
   color("orange") translate([0, 0, z_soporte]) soporte_motor();
   color("tomato") translate([0, 0, z_carro0]) carro();
@@ -474,6 +579,15 @@ else if (pieza == "trineo") trineo();
 else if (pieza == "tapa_inferior") tapa_inferior();
 else if (pieza == "plantilla_taladro") plantilla_taladro();
 else if (pieza == "pinza_cable") pinza_cable();
+else if (pieza == "alma_paleta") alma_paleta();
+else if (pieza == "molde_paleta_base") molde_paleta_base();
+else if (pieza == "molde_paleta_tapa") molde_paleta_tapa();
+else if (pieza == "plantilla_tapon") plantilla_tapon();
+else if (pieza == "molde_montado") {      // solo para comprobar: molde cerrado con el alma dentro
+  color("lightgray", 0.5) molde_paleta_base();
+  color("orange") translate([0, 0, molde_fondo]) alma_paleta();
+  color("lightgray", 0.5) translate([0, 0, molde_fondo + pal_e]) molde_paleta_tapa();
+}
 else if (pieza == "cabeza_corte") difference() {     // solo para documentación
   union() {
     tapa_superior();

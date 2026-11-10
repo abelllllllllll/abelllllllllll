@@ -84,4 +84,4 @@ No uses GPIO2, GPIO8 ni GPIO9: son pines de arranque del chip.
 - ⚠️ **Para programar por USB, pon el interruptor general en OFF.** Así nunca se juntan el USB y la batería.
 - La celda 18650 nunca se suelda directamente: usa el portapilas.
 - **Consumo en reposo:** dormido gasta alrededor de 1–3 mA, la mayor parte por el LED rojo de encendido del SuperMini. Con eso la batería dura varias semanas en reposo. Si quieres más, desuelda ese LED rojo. Para guardar el aparato mucho tiempo, apaga el interruptor.
-- **Carga:** carga **fuera del baño**, con un cargador de móvil normal de 5 V. El LED rojo del TP4056 indica que está cargando y el azul o verde que ha terminado (se ven por la ventanita de la tapa inferior).
+- **Carga:** carga **fuera del baño**, con un cargador de móvil normal de 5 V. El LED rojo del TP4056 indica que está cargando y el azul o verde que ha terminado (se ven por la ventanita del tapón inferior).

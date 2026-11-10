@@ -58,7 +58,7 @@ Los valores por defecto (2 ml de dosis; 1,20 mm/s; 106 mm) salen del diseño y d
 
 ## Limpieza: que no se estanque la crema
 
-Las partes que tocan la crema son la jeringa (PP con tapón de goma), el tubo de silicona y la paleta (TPU). **Ninguna toca la electrónica.**
+Las partes que tocan la crema son la jeringa (PP con tapón de goma), el tubo de silicona y la paleta (silicona de platino, o TPU si usas la impresa). **Ninguna toca la electrónica.**
 
 - **Después de cada uso:** limpia la paleta con un pañuelo y luego agua con jabón neutro. Para sacarla, afloja el tornillo M2 y tira del cuello; no pierdas el muelle. Limpia también la cara de la cabeza alrededor del interruptor: si se acumula crema seca, la palanca puede quedarse pegada.
 - **Cada vez que cambies de jeringa:**
