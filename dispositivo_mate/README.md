@@ -2,13 +2,35 @@
 
 Plan de desarrollo del primer prototipo funcional.
 
-> Estado: **plan inicial**. Todavía no hay diseño 3D, firmware ni pruebas.
-> Antes de diseñar, leé la [revisión técnica](docs/revision_tecnica.md): ahí están los riesgos que conviene resolver primero.
+> Estado: **Fase 2 lista para imprimir** (banco de prueba del dosificador).
+> Hay un concepto del equipo completo, pero todavía no hay firmware ni pruebas reales.
+
+![Concepto del equipo en corte](mecanica/imagenes/equipo_corte.png)
 
 | Archivo | Qué contiene |
 |---|---|
 | [`README.md`](README.md) | El plan completo del proyecto (este archivo) |
 | [`docs/revision_tecnica.md`](docs/revision_tecnica.md) | Riesgos detectados, números de referencia y cambios sugeridos |
+| [`docs/modelo_original.md`](docs/modelo_original.md) | Medidas sacadas del SketchUp original |
+| [`docs/fase2_banco_dosificador.md`](docs/fase2_banco_dosificador.md) | Cómo imprimir, armar y probar el dosificador |
+| [`mecanica/dispositivo_mate.scad`](mecanica/dispositivo_mate.scad) | Modelo 3D paramétrico (OpenSCAD): piezas y concepto del equipo |
+| [`mecanica/stl/`](mecanica/stl/) | Piezas del dosificador listas para imprimir |
+| [`calculos/dosificador.py`](calculos/dosificador.py) | Gramos por vuelta, tiempo de dosis, capacidad de la tolva y CV |
+
+### Medidas actuales del diseño
+
+| | Plan original | SketchUp | **Diseño actual** |
+|---|---|---|---|
+| Forma | Cilindro | Caja con esquinas redondeadas | **Caja con esquinas redondeadas** |
+| Base | Ø 80 mm | 176 × 176 mm | **176 × 176 mm** |
+| Alto | 120 mm | 133 mm | **160 mm** (para que entre el tobogán de yerba) |
+
+### Cómo funciona el concepto
+
+1. El mate entra **boca abajo** sobre un aro de apoyo.
+2. Un rotor con **paletas de silicona** entra por la boca y gira: la yerba usada cae al **cajón de residuos**.
+3. El LED avisa que hay que **dar vuelta el mate** (único paso manual del MVP).
+4. Con el mate **boca arriba**, el **sinfín inclinado** lleva yerba desde la tolva de atrás hasta un tobogán que la deja en la boca.
 
 ---
 

@@ -9,6 +9,10 @@ Los números son **estimaciones de referencia**: hay que medirlos con tu mate y 
 
 ### 1. El mate probablemente no entra en 8 × 12 cm
 
+> **Actualización:** se adoptó la medida del SketchUp (176 × 176 mm) y el alto se subió a **160 mm**.
+> Con 133 mm entra un mate de 85 mm, pero no queda lugar para que el sinfín y el tobogán dejen la yerba **por encima** de la boca.
+> El modelo avisa en la consola si tu mate entra (`mate_alto`). Con 160 mm entra un mate de hasta **~91 mm** de alto.
+
 - Un mate de calabaza o de cerámica típico mide unos **7-9 cm de ancho y 8-11 cm de alto**.
 - Con paredes de 2,5 mm, un cilindro de 8 cm deja **~7,5 cm de diámetro interior**.
 - Si el mate va adentro, en el resto de la altura (1-4 cm) no caben motor, batería (la 18650 mide 65 × 18 mm), tolva, sinfín y depósito de residuos.
@@ -19,6 +23,8 @@ Los números son **estimaciones de referencia**: hay que medirlos con tu mate y 
 - **C.** Diseñar para un mate de tamaño fijo (por ejemplo un mate propio incluido con el equipo).
 
 ### 2. Limpiar y cargar piden posiciones opuestas
+
+> **Decisión para el MVP:** limpiar **boca abajo** y que el LED pida **dar vuelta el mate** antes de cargar. Girarlo solo queda para una versión posterior.
 
 - Para **sacar** la yerba usada conviene la boca del mate **hacia abajo** (la gravedad ayuda).
 - Para **cargar** yerba nueva, la boca tiene que estar **hacia arriba**.
@@ -59,7 +65,8 @@ El plan lista **1 motor**, pero hay **dos mecanismos** (raspador y sinfín). Opc
 - Densidad aparente de la yerba: aproximadamente **0,3 g/cm³** (medirla con tu marca).
 - 1 dosis de 8 g ≈ **27 cm³**.
 - Con ~44 cm² de sección interior (diámetro de 7,5 cm): **cada dosis ocupa ~0,6 cm de altura**.
-- **20 dosis (160 g) ≈ 530 cm³ ≈ 12 cm de altura de tolva.** No entra. Una tolva realista para este tamaño lleva **3-5 dosis**.
+- **20 dosis (160 g) ≈ 530 cm³ ≈ 12 cm de altura de tolva.** En Ø80 no entra: una tolva lleva **3-5 dosis**.
+- **Con el tamaño nuevo** (176 × 176 × 160 mm), la tolva trasera tiene ~400 cm³ ≈ **15 dosis** (ver `calculos/dosificador.py`).
 
 ### Depósito de residuos
 - La yerba usada absorbe agua: 8 g secos pueden ser **25-30 g húmedos** y unos **40-60 cm³**.
@@ -76,10 +83,8 @@ El plan lista **1 motor**, pero hay **dos mecanismos** (raspador y sinfín). Opc
 
 ---
 
-## ✅ Qué necesito para seguir
+## ✅ Qué falta
 
-1. **El archivo SketchUp original** (`.skp`). Subilo a `dispositivo_mate/diseno_original/` o pasámelo, y lo reviso.
-2. **Medidas de tu mate**: diámetro de la boca, diámetro máximo, altura y material.
-3. **Decisión sobre los riesgos 1 y 2**: tamaño del equipo y cómo queda el mate (adentro o afuera, boca arriba o abajo).
-
-Con eso se puede arrancar la **Fase 2 (dosificador)**, que es el mecanismo más independiente y fácil de validar primero: tolva, sinfín, motor y balanza.
+1. **Medidas de tu mate**: diámetro de la boca, diámetro máximo, alto y material. Cargalas en `mate_*` del `.scad`.
+2. **Imprimir y probar el dosificador** ([Fase 2](fase2_banco_dosificador.md)).
+3. Con los resultados, diseñar el **rotor de limpieza** (Fase 3) y probarlo con yerba húmeda.
