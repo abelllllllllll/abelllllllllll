@@ -10,6 +10,7 @@
 | **ESP32-C3** | El autómata (PLC): lee botones y sensores y manda señales |
 | **TB6612** | El inversor de giro con variador: con 2 señales eliges el sentido y con la tercera (PWM) la velocidad. El PLC no puede mover el motor directamente, igual que una salida de PLC no arranca un motor sin contactor |
 | **Final de carrera** | Exactamente lo mismo que en una máquina: marca el "cero" del carro |
+| **Sensor de contacto** | Un detector de presencia de pieza: la paleta se hunde al apoyarla en la piel y cierra el contacto. Funciona como el enclavamiento de una máquina: sin pieza, no hay ciclo |
 | **Divisor 100k/100k** | Un "reductor de señal": baja la tensión de la batería a la mitad para que el PLC la pueda medir sin dañarse |
 | **Resistencias de 10 k en los botones** | Mantienen la entrada en "1" mientras no pulsas. Pulsar la lleva a GND ("0") |
 
@@ -41,6 +42,9 @@
                   └── botón ── GND
 
    GPIO6 ───────────── final de carrera "NO" (normalmente abierto);  "COM" ── GND
+   3V3 ── 10 kΩ ──┬──► GPIO7      SENSOR DE CONTACTO (microinterruptor estanco de la paleta)
+                  ├── 100 nF ── GND          (filtra ruido: el cable mide ~60 cm)
+                  └── "NO" del sensor;  "COM" del sensor ── GND
    GPIO20 ── 330 Ω ──► LED (+, pata larga);   LED (−) ── GND
 ```
 
@@ -59,6 +63,7 @@
 | GPIO5 | Botón RETRAER | También despierta del sueño |
 | GPIO4 | Punto medio del divisor | Mide la batería |
 | GPIO6 | Final de carrera trasero | Cero del carro |
+| GPIO7 | Sensor de contacto de la paleta | Solo sale crema con la paleta apoyada |
 | GPIO20 | LED con 330 Ω | Estado |
 
 No uses GPIO2, GPIO8 ni GPIO9: son pines de arranque del chip.
@@ -71,7 +76,8 @@ No uses GPIO2, GPIO8 ni GPIO9: son pines de arranque del chip.
 4. **Primera prueba sin batería:** conecta solo el USB del ESP32 al ordenador y carga el firmware (ver `04_uso_calibracion_limpieza.md`). En el monitor serie debe aparecer "Aplicador listo". Al pulsar los botones, el LED tiene que reaccionar.
 5. **Motor:** conecta el N20 a AO1 y AO2. Sin jeringa, pulsa DOSIS. Si el carro baja en vez de subir, invierte los dos cables del motor o pon `INVERTIR_MOTOR = true`.
 6. **Batería:** con el interruptor en OFF, pon la celda en el portapilas y comprueba la polaridad con el multímetro antes de conectar al TP4056: + en B+, − en B−. Luego pasa el interruptor a ON.
-7. **Comprobación final de la batería:** mide la tensión real en la celda y compárala con la que dice el monitor serie. Si difieren más de 0,05 V, corrige `DIVISOR_BATERIA`.
+7. **Sensor de contacto:** el cable baja por dentro del brazo, sale por un lateral del collarín de la tapa superior y va por fuera del tubo, sujeto con 3 pinzas impresas, hasta el agujero de Ø4 de la cara trasera. Allí entra y va por el canal interior hasta la placa. Deja **unos 10 cm de cable sobrante** junto a la tapa superior, para poder sacarla al cambiar la jeringa. Sella el agujero de entrada con silicona neutra. Para comprobarlo, con el monitor serie abierto, pulsa DOSIS con la paleta en el aire: debe decir "Esperando contacto". Al apoyar la paleta, el motor arranca.
+8. **Comprobación final de la batería:** mide la tensión real en la celda y compárala con la que dice el monitor serie. Si difieren más de 0,05 V, corrige `DIVISOR_BATERIA`.
 
 ## Avisos
 

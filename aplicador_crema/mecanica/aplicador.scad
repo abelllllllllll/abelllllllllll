@@ -14,8 +14,9 @@
 // ============================================================================
 
 // "conjunto" | "conjunto_corte" | "tapa_superior" | "paleta" | "carro"
-// | "soporte_motor" | "trineo" | "tapa_inferior" | "plantilla_taladro"
+// | "soporte_motor" | "trineo" | "tapa_inferior" | "plantilla_taladro" | "pinza_cable"
 pieza = "conjunto_corte";
+corte_y = 0;   // solo para la vista "cabeza_corte"
 
 // ============================================================================
 //  MEDIDAS (mídelas en tus piezas)
@@ -173,34 +174,75 @@ module carro() {
 }
 
 // ============================================================================
-//  3) TAPA SUPERIOR + BRAZO A 45º (sujeta la jeringa por el hombro)
-//     Se fija al tubo con un tornillo M4 x 40 pasante + tuerca mariposa
-//     (para sacarla y cambiar la jeringa).
+//  3) TAPA SUPERIOR + BRAZO A 45º + CABEZA CON SENSOR DE CONTACTO
+//     Sujeta la jeringa por el hombro. Se fija al tubo con un tornillo M4 x 40
+//     pasante + tuerca mariposa (para sacarla y cambiar la jeringa).
+//     En la punta, la "cabeza" lleva la paleta flotante: la paleta desliza
+//     3 mm sobre un muelle y, al apoyarla en la piel, aprieta un
+//     microinterruptor estanco. Un tornillo M2 entra en una ranura del cuello
+//     de la paleta: la retiene, no la deja girar y limita el recorrido.
 // ============================================================================
-brazo_d = 16;  brazo_r = 25;  brazo_recto = 18;  brazo_45 = 45;  canal_d = sil_de + 0.6;
+brazo_d = 22;  brazo_r = 25;  brazo_recto = 18;  brazo_45 = 45;  canal_d = sil_de + 0.6;
 
-module trayecto_brazo(d) {
-  // tramo recto vertical
-  cylinder(d = d, h = brazo_recto);
-  // codo de 45º
-  translate([0, 0, brazo_recto]) translate([brazo_r, 0, 0]) rotate([90, 0, 0])
-    rotate([0, 0, 180 - 45]) rotate_extrude(angle = 45) translate([brazo_r, 0]) circle(d = d);
-  // tramo a 45º
-  translate([0, 0, brazo_recto]) translate([brazo_r, 0, 0]) rotate([0, 0, 0])
-    translate([-brazo_r * cos(45), 0, brazo_r * sin(45)]) rotate([0, -45, 0])
-      cylinder(d = d, h = brazo_45);
+// Cabeza y paleta flotante
+cabeza_d = 38;  cabeza_l = 26;
+zocalo_d = 12.4;  zocalo_prof = 22;    // agujero donde desliza el cuello de la paleta
+hueco_reposo = 3;                      // separación paleta-cabeza sin apoyar (= recorrido)
+muelle_l = 10;                         // muelle de compresión inox Øext ≤ 12, Øint ≥ 9,5
+cuello_l = zocalo_prof + hueco_reposo - (muelle_l - 2);   // 2 mm de precarga
+z_pasador = -8;                        // tornillo M2 que hace de pasador
+
+// Microinterruptor ESTANCO IP67 con palanca y cables (mídelo):
+ms_l = 20.0;  ms_e = 6.5;  ms_h = 10.3;  // largo, grueso, alto del cuerpo (sin palanca)
+ms_r = 11.0;                             // a qué distancia del eje va
+ms_hundido = 0.5;                        // el cuerpo queda 0,5 mm bajo la cara de la cabeza
+
+cable_off = 7.3;                         // canal de los cables del sensor por el brazo
+cable_d = 3.2;                           // 2 hilos de silicona 26 AWG
+
+// Eje del brazo: tramo recto vertical, codo de 45º (curvado hacia -X) y tramo a 45º.
+// Se construye como una cadena de "cápsulas" (esferas unidas): curva continua y
+// sin caras coincidentes (mallas limpias para el laminador).
+codo_pasos = 8;
+function eje_brazo(off) = concat(
+  [[0, -off, -0.5]],
+  [for (i = [0 : codo_pasos]) let(a = i * 45 / codo_pasos)
+     [-brazo_r + brazo_r * cos(a), -off, brazo_recto + brazo_r * sin(a)]],
+  [[-brazo_r + brazo_r * cos(45) - brazo_45 * sin(45), -off,
+    brazo_recto + brazo_r * sin(45) + brazo_45 * cos(45)]]);
+
+// off: desplaza el trayecto hacia -Y (canal de cables); acortar: recorta el final
+module trayecto_brazo(d, off = 0, acortar = 0) {
+  p = eje_brazo(off);
+  n = len(p);
+  fin = p[n - 1] - acortar * [-sin(45), 0, cos(45)];
+  for (i = [0 : n - 2]) hull() {
+    translate(p[i]) sphere(d = d, $fn = 32);
+    translate(i == n - 2 ? fin : p[i + 1]) sphere(d = d, $fn = 32);
+  }
 }
 
-punta_brazo = [brazo_r - brazo_r * cos(45) - brazo_45 * sin(45),
+punta_brazo = [-brazo_r + brazo_r * cos(45) - brazo_45 * sin(45),
                0,
                tapa_sup_l + 6 + brazo_recto + brazo_r * sin(45) + brazo_45 * cos(45)];
+
+// Sistema de la cabeza: Z hacia fuera por el eje del brazo, cara de la cabeza en z = 0
+module en_punta() { translate(punta_brazo) rotate([0, -45, 0]) children(); }
+
+assert(ms_r - ms_e / 2 > zocalo_d / 2 + 1, "el microinterruptor choca con el zócalo");
+assert(sqrt(pow(ms_r + ms_e / 2, 2) + pow(ms_l / 2, 2)) < cabeza_d / 2 - 0.8, "el microinterruptor no cabe en la cabeza");
+assert(cable_off + cable_d / 2 < brazo_d / 2 - 0.8 && cable_off - cable_d / 2 > canal_d / 2 + 0.6, "el canal de cables no cabe en el brazo");
 
 module tapa_superior() {
   difference() {
     union() {
       tapon(tubo_di, tapa_sup_l);
       translate([0, 0, tapa_sup_l]) cylinder(d = tubo_de, h = 6);       // tope sobre el tubo
-      translate([0, 0, tapa_sup_l + 6 - 0.01]) trayecto_brazo(brazo_d);
+      translate([0, 0, tapa_sup_l + 6 - 0.01]) trayecto_brazo(brazo_d, 0, brazo_d / 2 + 2);   // acaba dentro de la cabeza
+      en_punta() hull() {
+        translate([0, 0, -cabeza_l]) cylinder(d = cabeza_d, h = cabeza_l);
+        translate([0, 0, -cabeza_l - 12]) cylinder(d = brazo_d, h = 1);
+      }
     }
     // alojamiento del cuerpo de la jeringa + cono del hombro + punta
     translate([0, 0, -1]) cylinder(d = jer_de + 2 * holg, h = tapa_sup_bore + 1);
@@ -209,8 +251,21 @@ module tapa_superior() {
     // canal del tubo de silicona por todo el brazo
     cylinder(d = max(canal_d, jer_punta_d + 1), h = tapa_sup_l + 6 + 0.02);
     translate([0, 0, tapa_sup_l + 6]) trayecto_brazo(canal_d);
-    // zócalo de la paleta en la punta del brazo
-    translate(punta_brazo) rotate([0, -45, 0]) translate([0, 0, -12]) cylinder(d = 12.2, h = 13);
+    // canal de los cables del sensor: de la cabeza al collarín, y sale por un lado
+    translate([0, 0, tapa_sup_l + 6]) trayecto_brazo(cable_d, cable_off, 4);   // acaba dentro del alojamiento del interruptor
+    translate([0, -cable_off, tapa_sup_l + 3]) cylinder(d = cable_d, h = 3.1);
+    translate([0, -cable_off, tapa_sup_l + 3]) rotate([90, 0, 0]) cylinder(d = cable_d, h = 20);
+    en_punta() {
+      // zócalo de la paleta (con el muelle al fondo)
+      translate([0, 0, -zocalo_prof]) cylinder(d = zocalo_d, h = zocalo_prof + 1);
+      // alojamiento del microinterruptor
+      translate([-ms_l / 2 - 0.2, -ms_r - ms_e / 2 - 0.2, -ms_hundido - ms_h])
+        cube([ms_l + 0.4, ms_e + 0.4, ms_h + ms_hundido + 1]);
+      // los cables del microinterruptor bajan al canal
+      translate([0, -cable_off, -cabeza_l - 13]) cylinder(d = cable_d, h = cabeza_l + 13 - ms_h);
+      // agujero del tornillo-pasador M2 (autorroscante en PETG)
+      translate([0, 0, z_pasador]) rotate([0, 90, 0]) cylinder(d = 1.8, h = cabeza_d);
+    }
     // tornillo M4 pasante (cuerda desplazada para no cortar el canal)
     translate([0, 10, tapa_sup_l - 4]) rotate([0, 90, 0]) cylinder(d = 4.4, h = 60, center = true);
   }
@@ -218,31 +273,53 @@ module tapa_superior() {
 
 // ============================================================================
 //  4) PALETA APLICADORA (imprimir en TPU 95A, blanda y lavable)
-//     El tubo de silicona entra 10 mm a presión en el cuello.
+//     El tubo de silicona entra 10 mm a presión por el extremo del cuello.
+//     La ranura del cuello va hacia +X (donde entra el tornillo-pasador M2).
 // ============================================================================
 pal_l = 85;  pal_a = 60;  pal_e = 9;
+cuello_d = zocalo_d - 0.5;
 
 module paleta() {
+  // posición del pasador en coordenadas de la paleta, en reposo
+  zp = pal_e + hueco_reposo - z_pasador;
   difference() {
     union() {
-      // cuerpo ovalado, más fino en los bordes
+      // cuerpo ovalado, más fino en los bordes; la trasera plana pisa el interruptor
       hull() {
         scale([pal_l / 2, pal_a / 2, 1]) cylinder(r = 1, h = 2.5, $fn = 96);
-        translate([0, 0, 0]) scale([pal_l / 2 - 12, pal_a / 2 - 10, 1]) cylinder(r = 1, h = pal_e, $fn = 96);
+        scale([pal_l / 2 - 12, pal_a / 2 - 10, 1]) cylinder(r = 1, h = pal_e, $fn = 96);
       }
-      // cuello que entra en el brazo
-      translate([0, 0, pal_e - 0.01]) cylinder(d = 11.8, h = 14);
-      translate([0, 0, pal_e + 3]) cylinder(d = 12.4, h = 1.2);   // reborde de retención
+      // cuello que desliza en la cabeza
+      translate([0, 0, pal_e - 0.01]) cylinder(d = cuello_d, h = cuello_l);
     }
-    // tubo de silicona entra por el cuello
-    translate([0, 0, pal_e + 4]) cylinder(d = sil_de - 0.4, h = 11);
+    // tubo de silicona entra por el extremo del cuello
+    translate([0, 0, pal_e + cuello_l - 10]) cylinder(d = sil_de - 0.4, h = 11);
     // canal hasta la cara de aplicación
-    translate([0, 0, -1]) cylinder(d = 6, h = pal_e + 6);
+    translate([0, 0, -1]) cylinder(d = 6, h = pal_e + cuello_l - 9);
     // abocardado de salida
     translate([0, 0, -0.01]) cylinder(d1 = 12, d2 = 6, h = 3);
     // 4 surcos poco profundos para repartir la crema
     for (a = [0, 90, 180, 270]) rotate([0, 0, a])
       translate([6, -1.5, -0.01]) cube([pal_l / 2 - 16, 3, 1.2]);
+    // ranura del pasador: permite hundir la paleta hasta hueco_reposo mm
+    translate([cuello_d / 2 - 1.0, -1.15, zp - hueco_reposo - 1.1])
+      cube([2, 2.3, hueco_reposo + 2.2]);
+  }
+}
+
+// ============================================================================
+//  4b) PINZA PARA EL CABLE DEL SENSOR (por fuera del tubo, imprimir 3)
+// ============================================================================
+module pinza_cable() {
+  difference() {
+    union() {
+      cylinder(d = tubo_de + 4, h = 8);
+      translate([0, -tubo_de / 2 - 3, 0]) cylinder(d = 7, h = 8);
+    }
+    translate([0, 0, -1]) cylinder(d = tubo_de + 0.3, h = 10);
+    translate([0, -tubo_de / 2 - 3, -1]) cylinder(d = 3.6, h = 10);   // cable de 2 hilos
+    // abertura para encajarla a presión en el tubo
+    rotate([0, 0, 90]) translate([0, -tubo_de * 0.33, -1]) cube([tubo_de, tubo_de * 0.66, 10]);
   }
 }
 
@@ -302,6 +379,8 @@ module tapa_inferior() {
 z_boton_dosis   = z_soporte - 15;
 z_led           = z_soporte - 28;
 z_boton_retraer = z_soporte - 40;
+z_cable_entrada = z_soporte - 6;     // agujero Ø4 por detrás (-Y) para el cable del sensor
+echo(str("=== CABLE DEL SENSOR: agujero Ø4 por la cara trasera (opuesta a los botones) a ", z_cable_entrada, " mm"));
 
 module plantilla_taladro() {
   // Se imprime, se pone alrededor del tubo apoyada en su extremo inferior
@@ -328,6 +407,7 @@ module tubo_pvc() {
     translate([0, 0, -1]) cylinder(d = tubo_di, h = tubo_largo + 2);
     for (z = [z_boton_dosis, z_boton_retraer]) translate([0, 0, z]) rotate([-90, 0, 0]) cylinder(d = 12.2, h = 40);
     translate([0, 0, z_led]) rotate([-90, 0, 0]) cylinder(d = 5, h = 40);
+    translate([0, 0, z_cable_entrada]) rotate([90, 0, 0]) cylinder(d = 4, h = 40);
   }
 }
 
@@ -375,8 +455,12 @@ module conjunto(corte = false) {
   jeringa_fantasma();
   electronica_fantasma();
   color("orange") translate([0, 0, z_tapa_sup]) tapa_superior();
-  color("mediumseagreen") translate([0, 0, z_tapa_sup]) translate(punta_brazo)
-    rotate([0, -45, 0]) translate([0, 0, -12 + 0.5]) rotate([180, 0, 0]) translate([0, 0, -pal_e - 14]) paleta();
+  color("mediumseagreen") translate([0, 0, z_tapa_sup]) en_punta()
+    translate([0, 0, hueco_reposo]) rotate([180, 0, 0]) translate([0, 0, -pal_e]) paleta();
+  color("red") translate([0, 0, z_tapa_sup]) en_punta()
+    translate([-ms_l / 2, -ms_r - ms_e / 2, -ms_hundido - ms_h]) cube([ms_l, ms_e, ms_h]);
+  for (z = [z_cable_entrada + 30, (z_cable_entrada + tubo_largo) / 2, tubo_largo - 40])
+    color("orange") translate([0, 0, z]) pinza_cable();
 }
 
 // ============================================================================
@@ -389,3 +473,12 @@ else if (pieza == "soporte_motor") soporte_motor();
 else if (pieza == "trineo") trineo();
 else if (pieza == "tapa_inferior") tapa_inferior();
 else if (pieza == "plantilla_taladro") plantilla_taladro();
+else if (pieza == "pinza_cable") pinza_cable();
+else if (pieza == "cabeza_corte") difference() {     // solo para documentación
+  union() {
+    tapa_superior();
+    en_punta() translate([0, 0, hueco_reposo]) rotate([180, 0, 0]) translate([0, 0, -pal_e]) paleta();
+    en_punta() translate([-ms_l / 2, -ms_r - ms_e / 2, -ms_hundido - ms_h]) cube([ms_l, ms_e, ms_h]);
+  }
+  translate([-200, corte_y - 400, -10]) cube([400, 400, 400]);
+}

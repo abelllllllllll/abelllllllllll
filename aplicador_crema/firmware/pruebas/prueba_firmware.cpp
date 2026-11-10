@@ -80,6 +80,7 @@ void bateria(double v) { tensionReal = v; sim::adcMv[PIN_BATERIA] = (int)(v / DI
 // Arranca con la posición ya guardada en memoria (caso normal de uso).
 void arrancar(double v = 3.8, bool porBoton = false, bool memoriaConPosicion = true) {
   for (int p = 0; p < 32; p++) sim::entradas[p] = HIGH;
+  sim::entradas[PIN_CONTACTO] = LOW;       // por defecto, paleta apoyada en la piel
   bateria(v);
   if (memoriaConPosicion) { sim::nvs["pos"] = carroMm; sim::nvs["conocida"] = 1; }
   sim::causaDespertar = porBoton ? ESP_SLEEP_WAKEUP_GPIO : ESP_SLEEP_WAKEUP_UNDEFINED;
@@ -101,7 +102,7 @@ void pruebaPulsacionCorta() {
   COMPROBAR(cerca(mlSoltados, DOSIS_ML, 0.05), "suelta DOSIS_ML");
   COMPROBAR(cerca(retrocesoMsTotal, ANTIGOTEO_MS, 5), "hace antigoteo");
   COMPROBAR(estado == REPOSO && sentidoMotor() == 0, "vuelve a reposo con motor parado");
-  COMPROBAR(cerca(sim::nvs["pos"], posicionMm, 0.06), "guarda la posición en memoria");
+  COMPROBAR(cerca(sim::nvs["pos"], frenteMm, 0.06), "guarda la posición en memoria");
 }
 
 void pruebaDosisSeguidas() {
@@ -259,6 +260,60 @@ void pruebaDesgasteMemoria() {
   COMPROBAR(sim::escriturasNvs <= 10 * 3 * 2, "pocas escrituras por dosis (no gasta la flash)");
 }
 
+void apoyar()   { sim::entradas[PIN_CONTACTO] = LOW; }
+void levantar() { sim::entradas[PIN_CONTACTO] = HIGH; }
+
+void pruebaSinContactoNoSale() {
+  arrancar(); levantar();
+  clic(PIN_BOTON_DOSIS); correr(ESPERA_CONTACTO_MS + 1000);
+  pulsar(PIN_BOTON_DOSIS); correr(3000); soltar(PIN_BOTON_DOSIS); correr(1000);
+  std::printf("    %.2f ml con la paleta en el aire\n", mlSoltados);
+  COMPROBAR(avanceMsTotal == 0, "sin contacto no sale nada (ni dosis ni continuo)");
+  COMPROBAR(estado == REPOSO, "la dosis sin contacto se cancela sola");
+}
+
+void pruebaPulsarYLuegoApoyar() {
+  arrancar(); levantar();
+  clic(PIN_BOTON_DOSIS); correr(2000);
+  COMPROBAR(avanceMsTotal == 0, "espera al contacto");
+  apoyar(); correr(5000);
+  std::printf("    %.2f ml tras apoyar 2 s después de pulsar\n", mlSoltados);
+  COMPROBAR(cerca(mlSoltados, DOSIS_ML, 0.05), "al apoyar suelta la dosis completa");
+}
+
+void pruebaLevantarAMitad() {
+  arrancar();
+  clic(PIN_BOTON_DOSIS); correr(1000);
+  double aMitad = mlSoltados;
+  levantar(); correr(2000);
+  double enElAire = mlSoltados - aMitad;
+  COMPROBAR(enElAire < 0.03, "al levantar la paleta deja de salir crema (< 0,03 ml: lo que tarda el antirrebote)");
+  COMPROBAR(retrocesoMsTotal > 0, "y hace antigoteo para que no gotee");
+  apoyar(); correr(5000);
+  std::printf("    %.2f ml antes de levantar, %.2f en el aire, %.2f en total\n", aMitad, enElAire, mlSoltados);
+  COMPROBAR(cerca(mlSoltados, DOSIS_ML, 0.05), "al volver a apoyar completa la dosis exacta");
+}
+
+void pruebaContinuoIntermitente() {
+  arrancar();
+  pulsar(PIN_BOTON_DOSIS);
+  for (int i = 0; i < 3; i++) { apoyar(); correr(2000); levantar(); correr(1000); }
+  soltar(PIN_BOTON_DOSIS); correr(1000);
+  // Cada vez que se vuelve a apoyar, primero recupera el hueco del antigoteo (no es crema).
+  double hueco = ANTIGOTEO_MS / 1000.0 * MM_POR_SEGUNDO * ML_POR_MM;
+  double esperado = 3 * 2.0 * MM_POR_SEGUNDO * ML_POR_MM - 2 * hueco;
+  std::printf("    %.2f ml (esperado ~%.2f: solo los 6 s con contacto)\n", mlSoltados, esperado);
+  COMPROBAR(cerca(mlSoltados, esperado, 0.1), "en continuo solo sale crema mientras hay contacto");
+}
+
+void pruebaRebotesContacto() {
+  arrancar(); levantar();
+  clic(PIN_BOTON_DOSIS);
+  for (int i = 0; i < 20; i++) { apoyar(); correr(3); levantar(); correr(3); }   // roce
+  correr(500);
+  COMPROBAR(mlSoltados < 0.02, "un roce de pocos ms no suelta crema");
+}
+
 // ---------------------------------------------------------------- main
 int main() {
   struct { const char *nombre; std::function<void()> f; } pruebas[] = {
@@ -278,6 +333,11 @@ int main() {
     {"Batería agotada al arrancar", pruebaBateriaVacia},
     {"Batería que se agota en uso", pruebaBateriaSeAgota},
     {"Escrituras en memoria", pruebaDesgasteMemoria},
+    {"CONTACTO: paleta en el aire no suelta crema", pruebaSinContactoNoSale},
+    {"CONTACTO: pulsar y luego apoyar", pruebaPulsarYLuegoApoyar},
+    {"CONTACTO: levantar a mitad de dosis", pruebaLevantarAMitad},
+    {"CONTACTO: continuo con contacto intermitente", pruebaContinuoIntermitente},
+    {"CONTACTO: roces cortos se ignoran", pruebaRebotesContacto},
   };
   int ok = 0, total = 0;
   for (auto &p : pruebas) {

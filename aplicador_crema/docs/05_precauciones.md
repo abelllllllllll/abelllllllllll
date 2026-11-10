@@ -26,6 +26,7 @@
 - **Las piezas impresas tienen poros microscópicos** entre capas. La paleta de TPU se lava bien, pero cámbiala (reimprímela) si ves restos que no salen o si cambia de color. Para piel muy sensible, puedes sustituir la paleta por una espátula de silicona de cocina comercial recortada y pegada al cuello.
 - **No uses esponja:** retiene crema y crían bacterias.
 - **Antes del primer uso**, prueba la paleta en una zona pequeña de piel (antebrazo) durante un par de días.
+- **Sensor de contacto:** basta un apoyo suave (≈ 1–2 N) para activarlo. No hace falta apretar. Si alguna vez no responde, revisa que no haya crema seca en la palanca. Como último recurso, pon `REQUIERE_CONTACTO = false`.
 - La paleta no tiene que hacer fuerza: el aparato solo lleva la crema. Si notas presión excesiva o roces, revisa los bordes de la paleta y lijalos.
 
 ## Mecánicas

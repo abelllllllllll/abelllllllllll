@@ -2,7 +2,17 @@
 
 ![Conjunto en corte](../mecanica/imagenes/conjunto_corte.png)
 
-De abajo arriba: **tapa inferior** (USB-C e interruptor) → **trineo** con el TP4056, la batería y la placa → **soporte del motor** (N20, acoplador, rodamiento y final de carrera) → **carro con tubo empujador** → **jeringa de 60 ml** → **tapa superior con brazo a 45°** → **paleta**.
+De abajo arriba: **tapa inferior** (USB-C e interruptor) → **trineo** con el TP4056, la batería y la placa → **soporte del motor** (N20, acoplador, rodamiento y final de carrera) → **carro con tubo empujador** → **jeringa de 60 ml** → **tapa superior con brazo a 45° y cabeza con sensor** → **paleta flotante**.
+
+## Cabeza con sensor de contacto
+
+![Corte de la cabeza](../mecanica/imagenes/cabeza_corte.png)
+
+- La **paleta flotante** entra por su cuello en el zócalo de la cabeza, apoyada sobre un **muelle** que la empuja hacia fuera. En reposo queda **3 mm** separada de la cabeza.
+- Un **tornillo M2** atraviesa la pared de la cabeza y entra en una **ranura** del cuello. Así la paleta no se sale, no gira y no se hunde más de 3 mm.
+- Al apoyar la paleta en la piel con una fuerza suave (≈ 1–2 N, como apoyar un cepillo), se hunde y su cara trasera aprieta la palanca del **microinterruptor estanco**, alojado en la cara de la cabeza.
+- El tubo de crema pasa por dentro del muelle y entra 10 mm a presión en el cuello. Los 3 mm de recorrido los absorbe el propio tubo sin problema.
+- El cable del interruptor baja por un canal propio dentro del brazo, separado del de la crema, y sale por un lateral del collarín.
 
 ## Cómo funciona el empujador
 
@@ -36,6 +46,7 @@ Los STL ya generados con las medidas típicas están en `mecanica/stl/`.
 | `tapa_inferior` | PETG | Con el reborde abajo | — |
 | `paleta` | **TPU 95A** | Con la cara de aplicación abajo | 3 perímetros, 25 % de relleno; queda blanda |
 | `plantilla_taladro` | PLA o PETG | — | Solo sirve para marcar los agujeros |
+| `pinza_cable` (×3) | PETG | De pie | Sujetan el cable del sensor por fuera del tubo |
 
 ## Pasos
 
@@ -51,12 +62,18 @@ Los STL ya generados con las medidas típicas están en `mecanica/stl/`.
 5. **Lubrica** la varilla con grasa de silicona.
 6. **Trineo:** sujeta con bridas el portapilas, el TP4056 (con el USB-C hacia abajo, alineado con la ventana de la tapa) y la placa. Pasa los cables por el canal de la pared.
 7. **Montaje en el tubo:** monta los botones y el LED en el tubo. Mete el trineo y la tapa inferior por abajo, y el soporte del motor con el carro por arriba, hasta su sitio. Fíjalos con los M3.
-8. **Tapa superior:** pasa el tubo de silicona por el canal del brazo (con jabón entra mejor) y deja que asome unos 15 mm por cada lado. Encaja el cuello de la paleta en el zócalo y mete el tubo 10 mm en el cuello.
+8. **Tapa superior y sensor:**
+   - Pasa los cables del microinterruptor por su canal del brazo, empujándolos desde la cabeza hasta que salgan por el lateral del collarín. Si cuesta, guíalos con un alambre fino.
+   - Mete el microinterruptor en su alojamiento con la palanca hacia fuera y fíjalo con una gota de silicona neutra o epoxi.
+   - Pasa el tubo de silicona por el canal central del brazo (con jabón entra mejor) y deja que asome unos 15 mm por cada lado.
+   - Mete el muelle en el fondo del zócalo y el tubo de silicona 10 mm en el cuello de la paleta. Empuja la paleta en el zócalo, con la ranura del cuello hacia el agujero del M2, y enrosca el tornillo M2 hasta que toque. Luego **aflójalo media vuelta**: la paleta debe deslizar suave y volver sola.
+   - **Ajuste:** con la paleta en reposo, el interruptor **no** debe hacer clic. Al hundirla unos 2 mm, sí. Si no hace clic, dobla un poco la palanca hacia fuera. Si hace clic sin apoyar, dóblala hacia dentro.
+9. **Cable por fuera:** baja el cable por la cara trasera del tubo (la opuesta a los botones) con las 3 pinzas y mételo por el agujero de Ø4 (ver `02_esquema_conexiones.md`).
 
 ## Cambiar o rellenar la jeringa
 
 1. Pulsa **RETRAER** y espera a que el carro llegue atrás del todo (≈ 90 s; el LED queda fijo mientras se mueve).
-2. Quita el tornillo M4 con la mariposa y saca la tapa superior: el tubo de silicona sale con ella. Saca la jeringa.
+2. Quita el tornillo M4 con la mariposa y saca la tapa superior: el tubo de silicona sale con ella. Apártala a un lado; el cable del sensor tiene holgura para ello. Saca la jeringa.
 3. **Rellenar:** saca el tapón de goma con el vástago guardado. Llena el cuerpo por detrás con una espátula o una manga pastelera desechable, dando golpecitos para que no queden burbujas. Mete el tapón con el vástago, pasando un alambre fino entre el tapón y la pared para que escape el aire. Empuja hasta que asome crema por la punta y quita el vástago.
 4. Mete la jeringa con la punta hacia arriba, conecta el tubo de silicona, pon la tapa y el tornillo.
 5. La primera dosis tarda un poco: el empujador recorre unos 2 mm hasta tocar el tapón.

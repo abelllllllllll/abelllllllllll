@@ -8,13 +8,14 @@ Es un mango de PVC de unos 60 cm con una paleta blanda en la punta. Dentro, un p
 
 ## Características
 
+- **Detecta el contacto con la piel:** la paleta va sobre un muelle y un sensor estanco. La crema **solo sale con la paleta apoyada**; si la levantas se para, y sigue al volver a apoyarla. Nada de manchar el suelo.
 - **Pulsación corta:** dosis fija (2 ml, ajustable). **Mantener:** sale crema mientras lo mantengas. **Pulsar durante una dosis:** la cancela.
 - **Antigoteo:** al terminar, el motor retrocede un instante para que no siga saliendo crema.
 - **Apagado automático** a los 2 minutos sin uso; se despierta con un botón.
 - **Batería** de una celda 18650 que se carga por USB-C, con aviso de batería baja.
 - Sabe cuándo está **vacía la jeringa**, y las jeringas se cambian como cartuchos.
 - Todo funciona a **3–4,2 V**. Nada calienta.
-- Coste: **≈ 55 €** en piezas.
+- Coste: **≈ 59 €** en piezas.
 
 ## Contenido
 
@@ -26,7 +27,7 @@ Es un mango de PVC de unos 60 cm con una paleta blanda en la punta. Dentro, un p
 | [`docs/04_uso_calibracion_limpieza.md`](docs/04_uso_calibracion_limpieza.md) | Cargar firmware, uso, calibración y limpieza |
 | [`docs/05_precauciones.md`](docs/05_precauciones.md) | Seguridad eléctrica, calor, agua, piel |
 | `firmware/aplicador_crema/` | Firmware para Arduino IDE (ESP32-C3), comentado en español |
-| `firmware/pruebas/` | Simulador que prueba el firmware en el PC (16 pruebas) |
+| `firmware/pruebas/` | Simulador que prueba el firmware en el PC (21 pruebas) |
 | `mecanica/aplicador.scad` | Diseño paramétrico en OpenSCAD + STL listos en `mecanica/stl/` |
 | `calculos/hidraulica.py` | Cálculo de presión y fuerza: por qué jeringa y no bomba peristáltica |
 
@@ -34,10 +35,12 @@ Es un mango de PVC de unos 60 cm con una paleta blanda en la punta. Dentro, un p
 
 **Verificado sin el aparato físico:**
 - El firmware **compila para ESP32-C3** (Arduino-ESP32 3.1.3) sin errores ni avisos.
-- El firmware pasa **16/16 pruebas** en un simulador que imita botones con rebotes, motor, husillo, jeringa, batería, memoria y sueño profundo.
-- Las 7 piezas 3D **se generan sin errores**, y el diseño comprueba solo que no haya interferencias entre piezas.
+- El firmware pasa **21/21 pruebas** en un simulador que imita botones con rebotes, sensor de contacto, motor, husillo, jeringa, batería, memoria y sueño profundo.
+- Las 8 piezas 3D **se generan sin errores** y con mallas cerradas (comprobado). El diseño comprueba solo que no haya interferencias entre piezas.
 - El cálculo hidráulico cubre cremas desde loción espesa hasta bálsamo denso.
 
-**Pendiente de comprobar con las piezas reales:** las medidas exactas de tu jeringa, tubo y motor (se ajustan en el `.scad`), la viscosidad de tu crema y la calibración de la dosis (10 minutos, explicada en la documentación).
+**Pendiente de comprobar con las piezas reales:** las medidas exactas de tu jeringa, tubo, motor y microinterruptor (se ajustan en el `.scad`), la viscosidad de tu crema, el ajuste fino de la palanca del sensor y la calibración de la dosis (10 minutos, explicada en la documentación).
+
+**Qué detecta y qué no:** detecta si la paleta está apoyada en la piel. **No** sabe en qué parte del cuerpo estás ni dónde falta crema; eso lo decides tú (consejos en `docs/04_uso_calibracion_limpieza.md`).
 
 ![Piezas imprimibles](mecanica/imagenes/piezas.png)
