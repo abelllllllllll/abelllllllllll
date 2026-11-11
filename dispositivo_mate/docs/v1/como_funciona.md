@@ -1,5 +1,7 @@
 # Cómo funciona (explicado fácil)
 
+![Infografía: cómo funciona](imagenes/mate_clean_infografia.png)
+
 ## 1. El equipo por fuera
 
 ![El equipo visto de frente](imagenes/1_frente_explicado.png)
