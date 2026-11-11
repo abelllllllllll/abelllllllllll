@@ -45,7 +45,7 @@ una calabaza mojada. Si en la prueba saca menos, las opciones son más tiempo, p
 | Energía por ciclo | ~37 mWh | |
 | Ciclos por carga de batería | **~440** | ≥ 20 ✅ |
 | Con 3 mates por día | Recarga cada ~4 meses | |
-| Tolva | ~600 cm³ ≈ 180 g ≈ **6 cebadas** | |
+| Tolva | ~560 cm³ ≈ 170 g ≈ **5-6 cebadas** | |
 | Cajón de residuos | Vaciar cada **2-3 ciclos** | |
 
 ## Qué cambió respecto del diseño anterior

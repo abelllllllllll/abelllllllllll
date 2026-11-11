@@ -84,9 +84,15 @@ dos_salida = 25;             // centro de la salida, medido desde la brida (= ce
 dos_entrada = [100, 145];    // ventana de entrada, medida desde la brida
 // Tolva removible ARRIBA (como un molinillo de café): se saca para llenarla o lavarla.
 tolva_socket = 8;            // encastre sobre el cuello del dosificador
-tolva_embudo = 40;           // alto del cono
+tolva_embudo = 68;           // alto del cono: paredes a ~60° para que la yerba no haga puente
 tolva_recta  = 55;           // alto del cilindro
-tolva_d      = 108;          // diámetro del cilindro
+tolva_d      = 96;           // diámetro del cilindro
+
+// --- Bandeja de electrónica (torre izquierda) ---
+band_x = [18, 138];  band_y = [torre_y + 6, D - 6];   // contorno
+band_z = pared + 4;                                   // apoya sobre 4 tetones del piso
+band_tornillos = [[24, torre_y + 10], [132, torre_y + 10], [24, D - 10], [132, D - 10]];
+usb_x  = 118;                                         // centro del conector USB-C (atrás)
 // Sinfín: medidas de la "receta" que sale de calculos/simulacion.py
 tubo_di = 25.6; tubo_de = 30.4; sinfin_d = 24; nucleo_d = 8; paso = 30; aleta_ang = 40;
 sinfin_largo = dos_largo - 8;
@@ -152,13 +158,21 @@ module carcasa(lado) {
         for (y=[30, 100, 180], z=[20, 110, 195])
             translate([lado < 0 ? modulo_ancho - pared - 1 : -1, y, z]) rotate([0, 90, 0])
                 cylinder(d=3.3, h=pared + 2);
-        // USB-C atrás (módulo izquierdo)
-        if (lado < 0) translate([60, D - pared - 1, 40]) cube([10, pared + 2, 5]);
+        // USB-C atrás (módulo izquierdo), alineado con el cargador de la bandeja
+        if (lado < 0) translate([usb_x - 5, D - pared - 1, band_z + 5]) cube([10, pared + 2, 4.5]);
+        // rebajes para las patas de silicona Ø12
+        for (y=[22, D - 22]) translate([lado < 0 ? 22 : modulo_ancho - 22, y, -0.01]) cylinder(d=12.6, h=1);
     }
     // pared entre estación y torre
     difference() {
         translate([pared, torre_y, pared]) cube([modulo_ancho - 2*pared, pared, H - techo_h - pared]);
         if (lado > 0) cuerpo_dos_hueco();  // paso del tubo
+        if (lado < 0) {
+            // cables del motor del rotor: pasan 11 mm sobre el piso (barrera contra la humedad)
+            translate([cxL + 6, torre_y - 1, pared + 11]) cube([8, pared + 2, 8]);
+            // cables de los sensores de la tapa (arriba)
+            translate([cxL - 6, torre_y - 1, H - techo_h - 9]) cube([12, pared + 2, 10]);
+        }
     }
     // repisas que sostienen el asiento / el plato
     if (lado < 0) for (a=[45, 135, 225, 315])
@@ -167,6 +181,10 @@ module carcasa(lado) {
     if (lado > 0) for (a=[0, 90, 180, 270])
         translate([cxL + cos(a)*(plato_d/2 - 2), cy + sin(a)*(plato_d/2 - 2), plato_z - 4])
             cylinder(d=10, h=4);
+    // tetones del piso donde se atornilla la bandeja de electrónica
+    if (lado < 0) for (t=band_tornillos) translate([t[0], t[1], pared - 0.01]) difference() {
+        cylinder(d=8, h=band_z - pared); cylinder(d=2.6, h=band_z - pared + 1);
+    }
     // nervio que sostiene la columna del motor (va por la ranura del cajón)
     if (lado < 0) translate([cxL - 4, cy, pared]) cube([8, torre_y - cy, cajon_z + cajon_h - pared]);
 }
@@ -191,6 +209,21 @@ module techo(lado) {
             for (x=[cxL - 14, cxL + 14]) translate([x, D - 28, H - pared - 1]) cylinder(d=16, h=pared + 2);
         }
     }
+    if (lado < 0) soporte_sensores();
+}
+// Soporte de los sensores de la tapa (parte del techo izquierdo): queda bajo el borde
+// de atrás de la tapa. Lleva el sensor Hall (ranura) y el microinterruptor (2 tornillos M2).
+sens_y = cy + tapa_limp_d/2 - 12;      // debajo del imán de la tapa
+module soporte_sensores() {
+    zt = H - 1.6 - 5 - 0.8;            // justo debajo del reborde de la tapa
+    difference() {
+        hull() {
+            translate([cxL - 13, torre_y - 2, zt - 3]) cube([26, 8, H - pared - zt + 3]);
+            translate([cxL - 13, sens_y - 6, zt - 3]) cube([26, 1, 3]);
+        }
+        translate([cxL - 2.3, sens_y - 3, zt - 1.8]) cube([4.6, 4, 2]);                  // sensor Hall
+        for (sx=[-1, 1]) translate([cxL + sx*4.75 + 8*0, sens_y + 6, zt - 4]) cylinder(d=1.8, h=6); // micro (M2)
+    }
 }
 // Tapa redonda de la estación de limpieza (lleva el imán del sensor)
 module tapa_limpieza() {
@@ -200,7 +233,7 @@ module tapa_limpieza() {
         translate([0, 0, -1]) cylinder(d=tapa_limp_d - 12, h=7);
     }
     // alojamiento del imán Ø6x3
-    translate([cxL + tapa_limp_d/2 - 12, cy, H - 1.6 - 4]) difference() {
+    translate([cxL, sens_y, H - 1.6 - 4]) difference() {
         cylinder(d=10, h=4); translate([0, 0, -0.1]) cylinder(d=6.2, h=3.1);
     }
 }
@@ -378,10 +411,39 @@ module tapa_tolva() {
 // ============================================================================
 //  ELECTRÓNICA (volúmenes de referencia, no se imprimen)
 // ============================================================================
+// Bandeja: portapilas 2x18650, placa perforada 5x7 cm sobre 4 columnas y cargador USB-C
+pcb_post = [[22, band_y[0] + 2], [88, band_y[0] + 2], [22, band_y[0] + 47.7], [88, band_y[0] + 47.7]];
+module bandeja_electronica() {
+    difference() {
+        union() {
+            translate([band_x[0], band_y[0], band_z]) cube([band_x[1] - band_x[0], band_y[1] - band_y[0], 2]);
+            // marco del portapilas (77 x 41 mm)
+            translate([24, band_y[0] + 4, band_z]) difference() {
+                cube([81, 45, 8]); translate([1.6, 1.6, 2]) cube([77.8, 41.8, 7]);
+                translate([-1, 14, 2]) cube([83, 17, 7]);       // salida de cables
+            }
+            // columnas de la placa (M3 autorroscante)
+            for (q=pcb_post) translate([q[0], q[1], band_z]) cylinder(d=7, h=32);
+            // cuna del cargador USB-C (28 x 17 mm), con el conector hacia atrás
+            translate([usb_x - 16, band_y[1] - 22, band_z]) difference() {
+                cube([32, 22, 7]); translate([1.8, 1.8, 3]) cube([28.4, 21, 5]);
+            }
+            // cuna del BMS y del regulador
+            translate([usb_x - 16, band_y[0] + 4, band_z]) difference() {
+                cube([32, 40, 5]); translate([1.6, 1.6, 2]) cube([28.8, 36.8, 4]);
+            }
+        }
+        for (q=pcb_post) translate([q[0], q[1], band_z + 20]) cylinder(d=2.6, h=13);
+        for (t=band_tornillos) translate([t[0], t[1], band_z - 1]) cylinder(d=3.3, h=12);
+        // ranuras para precintos
+        for (x=[40, 80]) translate([x, band_y[0] + 2, band_z - 1]) cube([6, 2.2, 4]);
+    }
+}
 module electronica() {
-    color("RoyalBlue") for (i=[0, 1]) translate([20, torre_y + 12 + i*20, pared + 10]) rotate([0, 90, 0]) cylinder(d=18.5, h=65); // 2x18650
-    color("SeaGreen") translate([15, torre_y + 10, 60]) cube([55, 45, 12]);    // placa: ESP32-C3 + drivers
-    color("DarkSlateGray") translate([80, torre_y + 10, 60]) cube([40, 25, 12]);// cargador 2S USB-C + BMS
+    color("RoyalBlue") for (i=[0, 1]) translate([32, band_y[0] + 16 + i*21, band_z + 12]) rotate([0, 90, 0]) cylinder(d=18.5, h=65); // 2x18650
+    color("SeaGreen") translate([19, band_y[0] - 1, band_z + 32]) cube([72, 51, 1.6]);       // placa: ESP32-C3 + drivers
+    color("SeaGreen") translate([40, band_y[0] + 12, band_z + 33.6]) cube([18, 23, 5]);      // ESP32-C3
+    color("DarkSlateGray") translate([usb_x - 14, band_y[1] - 20, band_z + 3]) cube([28, 17, 4]); // cargador 2S USB-C
     color("Silver") translate([cxL, cy, pared]) cylinder(d=25, h=col_alto - 3); // motor rotor JGA25
     color("White") translate([modulo_ancho + cxL, 28, H - 6]) cylinder(d=16, h=6); // botón
     color("DeepSkyBlue") translate([modulo_ancho + cxL, 28, H - 1]) difference() { cylinder(d=31, h=1.2); translate([0,0,-1]) cylinder(d=20, h=3); }
@@ -424,16 +486,17 @@ module pos(nombre, ex=0) {
     if (nombre == "dosificador")   translate([modulo_ancho + ex*0.4, 0, ex*0.6]) cuerpo_dosificador_v1();
     if (nombre == "sinfin")        translate([modulo_ancho + ex*0.4, 0, ex*0.6]) en_eje_dos() translate([1, 0, 0]) rotate([0, 90, 0]) sinfin_v1();
     if (nombre == "electronica")   electronica();
+    if (nombre == "bandeja")       translate([0, ex*1.2, 0]) bandeja_electronica();
     if (nombre == "mate_limpieza") translate([cxL, cy, z_asiento(52.5) + ex*1.5]) mate_camionero(true);
     if (nombre == "mate_carga")    translate([modulo_ancho + cxL + ex*0.4, cy, plato_z + 6]) mate_camionero(false);
 }
 
 // Primero las piezas opacas y al final las translúcidas (así se ve el interior)
-piezas_ens = ["columna_motor", "asiento", "cubo_rotor", "paletas", "cajon",
+piezas_ens = ["bandeja", "columna_motor", "asiento", "cubo_rotor", "paletas", "cajon",
               "plato", "dosificador", "sinfin", "electronica", "tapa_tolva",
               "mate_limpieza", "mate_carga", "tolva",
               "carcasa_izq", "carcasa_der", "techo_izq", "techo_der", "tapa_limpieza"];
-colores = ["#777777", "#555555", "#c0392b", "#e67e22", "#1c1c1e",
+colores = ["#8a8f8a", "#777777", "#555555", "#c0392b", "#e67e22", "#1c1c1e",
            "#3a3a3c", "#cfcfcf", "#f39c12", "#2e8b57", "#2c2c2e",
            "#1e4d8c", "#1e4d8c", "#7d8a8f",
            "#1c1c1e", "#1c1c1e", "#1c1c1e", "#1c1c1e", "#2c2c2e"];
@@ -500,6 +563,7 @@ else if (pieza == "paleta_corta")  translate([0, 0, paleta_esp/2]) rotate([-90, 
 else if (pieza == "cajon")         translate([0, 0, -cajon_z]) cajon();
 else if (pieza == "tapa_limpieza") translate([0, 0, H]) mirror([0, 0, 1]) tapa_limpieza();
 else if (pieza == "plato")         plato();
+else if (pieza == "bandeja")       translate([0, 0, -band_z]) bandeja_electronica();
 else if (pieza == "dosificador")   translate([0, 0, -(dos_z - 18)]) cuerpo_dosificador_v1();   // con soportes bajo el tubo
 else if (pieza == "sinfin_v1")     sinfin_v1();
 // --- piezas en su posición, para el visor 3D ---

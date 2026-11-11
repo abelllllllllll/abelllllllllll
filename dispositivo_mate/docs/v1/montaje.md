@@ -9,7 +9,7 @@ STL en [`mecanica/stl_v1/`](../../mecanica/stl_v1/), ya orientados para imprimir
 | Pieza | Material | Relleno | Soportes | Notas |
 |---|---|---|---|---|
 | `carcasa_izq`, `carcasa_der` | ASA o PETG negro | 15 % | No | 145 × 230 × 208 mm. Poné los 230 mm a lo largo de la cama. ~10-12 h c/u |
-| `techo_izq`, `techo_der` | ASA o PETG negro | 15 % | No | Se imprimen boca abajo (cara de arriba sobre la cama) |
+| `techo_izq`, `techo_der` | ASA o PETG negro | 15 % | No | Se imprimen boca abajo (cara de arriba sobre la cama). El izquierdo trae el soporte de los sensores |
 | `tapa_limpieza` | PETG negro | 20 % | No | Tapa redonda de arriba; boca abajo sobre la cama |
 | `tolva` | PETG **translúcido ahumado** | 15 % | No | Cilíndrica. Boca abajo (la boca de arriba sobre la cama). Translúcida para ver cuánta yerba queda |
 | `tapa_tolva` | PETG negro | 20 % | No | |
@@ -19,6 +19,7 @@ STL en [`mecanica/stl_v1/`](../../mecanica/stl_v1/), ya orientados para imprimir
 | `columna_motor` | PETG natural | 30 % | No | |
 | `cajon` | PETG negro | 15 % | No | El frente queda al ras de la carcasa |
 | `plato` | PETG natural | 30 % | No | |
+| `bandeja` | PETG (cualquier color) | 20 % | No | Sostiene pilas, placa y cargador USB-C |
 | `dosificador` | PETG natural | 20 % | **Sí, solo bajo el tubo** | Tubo horizontal + cuello hacia la tolva |
 | `sinfin_v1` | PETG natural | 100 % | **Sí** | De pie, 0,16 mm. Lijar hasta que gire libre |
 
@@ -29,7 +30,7 @@ Todas las piezas que tocan yerba van en **PETG natural (sin pigmento)**. Igual, 
 
 1. Poné **insertos M3** con el soldador en las paredes de unión (9 por módulo) y en las repisas.
 2. Atornillá los dos módulos entre sí (M3 × 12).
-3. Pegá las patas de silicona.
+3. Pegá las 4 patas de silicona Ø12 en los rebajes de abajo.
 
 ## 3. Estación de limpieza (izquierda)
 
@@ -38,8 +39,8 @@ Todas las piezas que tocan yerba van en **PETG natural (sin pigmento)**. Igual, 
 3. Encastrá las 3 **paletas** en el `cubo_rotor` y metelo en el eje. Apretá el prisionero M3 contra la cara plana.
 4. Apoyá el `asiento` sobre las 4 repisas. Tiene que quedar **centrado con el rotor** y sin tocarlo.
 5. Meté el `cajon` por el frente: la ranura en U rodea la columna.
-6. Pegá el imán Ø6 × 3 en el hueco de la `tapa_limpieza`.
-7. Montá el **microinterruptor** y el **sensor Hall** debajo del `techo_izq`, junto al borde de la boca: con la tapa puesta, el micro tiene que hacer clic.
+6. Pegá el imán Ø6 × 3 en el hueco de la `tapa_limpieza` (queda del lado de atrás).
+7. En el soporte que trae el `techo_izq` (atrás de la boca): pegá el **sensor Hall** en su ranura y atornillá el **microinterruptor** con 2 tornillos M2. Con la tapa puesta, el micro tiene que hacer clic. Los cables bajan a la torre por la muesca de arriba de la pared.
 
 ## 4. Estación de carga (derecha)
 
@@ -55,6 +56,7 @@ Todas las piezas que tocan yerba van en **PETG natural (sin pigmento)**. Igual, 
 
 Seguí [conexiones.md](conexiones.md). Orden recomendado:
 
+0. Atornillá la `bandeja` a los 4 tetones del piso de la torre (M3 × 8). Lleva el portapilas, el BMS, el cargador (con el USB-C hacia el agujero de atrás) y 4 columnas para la placa.
 1. Armá la placa en el perforado: ESP32-C3, TB6612, DRV8871, MP1584, 74AHCT125 y divisor.
 2. Ajustá el MP1584 a 5,0 V **antes** de conectarle nada.
 3. Cargá el [firmware](../../firmware/dispositivo_mate/dispositivo_mate.ino) por USB.
