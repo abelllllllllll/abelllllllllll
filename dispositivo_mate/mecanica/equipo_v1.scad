@@ -69,12 +69,18 @@ paleta_corta = 60;    // set corto: calabacitas y mates bajos
 plato_d = 124;  plato_z = 32;
 
 // --- Dosificador inclinado ---
-dos_ang   = 45;               // inclinación del sinfín (más empinado = tolva más grande)
-dos_y_bajo = 200;             // brida (lado motor), atrás y abajo
-dos_y_alto = cy - 13;         // extremo de salida, adelante y arriba
-dos_z_alto = 193;             // eje del tubo en el extremo de salida (queda bajo el techo)
-dos_largo  = (dos_y_bajo - dos_y_alto) / cos(dos_ang);
-dos_z_bajo = dos_z_alto - (dos_y_bajo - dos_y_alto) * tan(dos_ang);
+// Sinfín HORIZONTAL arriba del mate (igual que el banco de prueba), de adelante hacia atrás.
+// El motor queda adelante; la salida, justo sobre el centro del plato; la entrada, atrás bajo la tolva.
+dos_z      = 192;            // eje del tubo
+dos_y_brida = cy - 25;       // cara de la brida (lado motor)
+dos_largo  = 168;            // hasta el fondo (atrás)
+dos_salida = 25;             // centro de la salida, medido desde la brida (= centro del plato)
+dos_entrada = [100, 145];    // ventana de entrada, medida desde la brida
+// Tolva removible ARRIBA (como un molinillo de café): se saca para llenarla o lavarla.
+tolva_socket = 8;            // encastre sobre el cuello del dosificador
+tolva_embudo = 70;           // alto del embudo
+tolva_recta  = 20;           // alto de la parte recta
+tolva_arriba = [modulo_ancho - 12, D - torre_y - 8];   // boca de arriba (X, Y)
 tubo_di = 23; tubo_de = 27.8; sinfin_d = 21.4; nucleo_d = 9; paso = 24; aleta_ang = 40;
 sinfin_largo = dos_largo - 8;
 
@@ -85,8 +91,8 @@ function z_asiento(r) = asiento_z0 + (r - asiento_r0) * tan(asiento_ang);
 echo(str("Mate boca abajo más alto: virola Ø", 105, " apoya a z=", z_asiento(52.5),
          " -> tope a ", z_asiento(52.5) + mate_alto_max, " mm (techo ", H - pared, ")"));
 echo(str("Mate boca arriba más alto: tope a ", plato_z + 8 + mate_alto_max,
-         " mm, salida de yerba a ", dos_z_alto - tubo_de/2, " mm"));
-echo(str("Sinfín v1: largo ", dos_largo, " mm, inclinado ", dos_ang, "°, brida a z=", dos_z_bajo));
+         " mm, salida de yerba a ", dos_z - tubo_de/2, " mm"));
+echo(str("Sinfín v1: horizontal, largo ", dos_largo, " mm; tolva hasta z=", H + tolva_socket + tolva_embudo + tolva_recta, " mm"));
 
 // ============================================================================
 //  UTILIDADES
@@ -140,7 +146,7 @@ module carcasa(lado) {
     // pared entre nicho y torre
     difference() {
         translate([lado < 0 ? pared : 0, torre_y, pared]) cube([modulo_ancho - pared, pared, H - 2*pared - 12]);
-        if (lado > 0) { cuerpo_dos_hueco(); tolva_v1_vol(0); }  // paso del tubo y la tolva
+        if (lado > 0) cuerpo_dos_hueco();  // paso del tubo
     }
     // repisas que sostienen el asiento / el plato
     if (lado < 0) for (a=[45, 135, 225, 315])
@@ -165,8 +171,8 @@ module techo(lado) {
         if (lado > 0) {
             // botón + anillo LED
             translate([cxL, 28, H - pared - 1]) cylinder(d=32, h=pared + 2);
-            // boca de la tolva (tapa con bisagra aparte)
-            translate([12, torre_y + 6, H - pared - 1]) cube([modulo_ancho - 24, D - torre_y - 12, pared + 2]);
+            // paso del cuello del dosificador (la tolva se apoya encima)
+            en_eje_dos() translate([dos_entrada[0] - 3.5, -14.5, 0]) cube([dos_entrada[1] - dos_entrada[0] + 7, 29, 40]);
         } else {
             // porta-bombilla y cepillo
             translate([22, D - 25, H - pared - 1]) cylinder(d=16, h=pared + 2);
@@ -294,50 +300,71 @@ module plato() {
     }
 }
 
-// Cuerpo del dosificador inclinado + tolva vertical (una pieza)
-function dir_dos() = [0, -cos(dos_ang), sin(dos_ang)];
-module en_eje_dos() {   // sistema local: X = a lo largo del tubo, desde la brida
-    translate([cxL, dos_y_bajo, dos_z_bajo]) rotate([-dos_ang, 0, 0]) rotate([0, 0, -90]) children();
+// Dosificador: tubo horizontal + brida + cuello hacia la tolva (una pieza)
+module en_eje_dos() {   // sistema local: X = a lo largo del tubo, desde la brida hacia atrás
+    translate([cxL, dos_y_brida, dos_z]) rotate([0, 0, 90]) children();
 }
 module cuerpo_dos_hueco() {
     en_eje_dos() translate([-1, 0, 0]) rotate([0, 90, 0]) cylinder(d=tubo_de + 2, h=dos_largo + 2);
 }
-// Tolva: abajo se apoya sobre la ventana del tubo inclinado; arriba ocupa toda la torre.
-module tolva_v1_vol(e) {
-    hull() {
-        en_eje_dos() translate([8 + e, -11 + e, tubo_de/2 - 3 - (e > 0 ? 10 : 0)]) cube([49 - 2*e, 22 - 2*e, 0.01]);
-        translate([pared + 3 + e, torre_y + pared + 2 + e, H - 13 + (e > 0 ? 1 : 0)])
-            cube([modulo_ancho - 2*pared - 6 - 2*e, D - torre_y - 2*pared - 4 - 2*e, 0.01]);
-    }
-}
+cuello_largo = dos_entrada[1] - dos_entrada[0] + 6;   // cuello: ventana + paredes de 3 mm
+cuello_ancho = 18 + 8;
+cuello_alto  = H + tolva_socket - dos_z;              // hasta el borde del encastre
 module cuerpo_dosificador_v1() {
     difference() {
-        union() {
-            en_eje_dos() {
-                rotate([0, 90, 0]) cylinder(d=tubo_de, h=dos_largo);
-                translate([0, -18, -18]) cube([4, 36, 36]);          // brida del motor
-            }
-            tolva_v1_vol(0);
+        en_eje_dos() union() {
+            rotate([0, 90, 0]) cylinder(d=tubo_de, h=dos_largo);
+            translate([0, -18, -18]) cube([4, 36, 36]);                                   // brida del motor
+            translate([dos_entrada[0] - 3, -cuello_ancho/2, 0]) cube([cuello_largo, cuello_ancho, cuello_alto]);
+            // orejas para atornillar a la pared de la torre (y = torre_y)
+            translate([torre_y - dos_y_brida - 3, -22, -8]) cube([3, 44, 16]);
         }
         en_eje_dos() {
             translate([-1, 0, 0]) rotate([0, 90, 0]) cylinder(d=tubo_di, h=dos_largo - 3 + 1);
-            // ventana de entrada (arriba, bajo la tolva)
-            translate([10, -9, 0]) cube([45, 18, 20]);
-            // salida (abajo, al final)
-            translate([dos_largo - 3 - 26, -9, -20]) cube([24, 18, 20]);
-            // eje M3 del fondo
-            translate([dos_largo - 5, 0, 0]) rotate([0, 90, 0]) cylinder(d=3.3, h=10);
-            for (s=[-1, 1]) translate([-1, s*13, 0]) rotate([0, 90, 0]) cylinder(d=3.3, h=6);
+            translate([dos_entrada[0], -9, 0]) cube([dos_entrada[1] - dos_entrada[0], 18, cuello_alto + 1]); // entrada
+            translate([dos_salida - 12, -9, -20]) cube([24, 18, 20]);                     // salida sobre el plato
+            translate([dos_largo - 5, 0, 0]) rotate([0, 90, 0]) cylinder(d=3.3, h=10);    // eje M3 del fondo
+            for (sx=[-1, 1]) translate([-1, sx*13, 0]) rotate([0, 90, 0]) cylinder(d=3.3, h=6);
+            for (sx=[-1, 1]) translate([torre_y - dos_y_brida - 4, sx*17, 0]) rotate([0, 90, 0]) cylinder(d=3.3, h=5);
         }
-        tolva_v1_vol(2);
     }
 }
-module tapa_tolva() {
-    difference() {
-        translate([12, torre_y + 6, 0]) cube([modulo_ancho - 24, D - torre_y - 12, 3]);
-        translate([modulo_ancho/2, torre_y + 14, -1]) cylinder(d=12, h=5);   // agarre
+// Tolva removible: se encastra sobre el cuello y se apoya en el techo
+module tolva_vol(e) {
+    z0 = H + tolva_socket;
+    hull() {
+        en_eje_dos() translate([dos_entrada[0] + e - (e > 0 ? 0 : 3), -9 + e - (e > 0 ? 0 : 3), z0 - dos_z - (e > 0 ? 1 : 0)])
+            cube([dos_entrada[1] - dos_entrada[0] - 2*e + (e > 0 ? 0 : 6), 18 - 2*e + (e > 0 ? 0 : 6), 0.01]);
+        translate([cxL - tolva_arriba[0]/2 + e, torre_y + 2 + e, z0 + tolva_embudo]) cube([tolva_arriba[0] - 2*e, tolva_arriba[1] - 2*e, 0.01]);
     }
-    for (x=[20, modulo_ancho - 40]) translate([x, D - 8, 1.5]) rotate([0, 90, 0]) cylinder(d=5, h=20);
+    translate([cxL - tolva_arriba[0]/2 + e, torre_y + 2 + e, z0 + tolva_embudo - 0.01])
+        cube([tolva_arriba[0] - 2*e, tolva_arriba[1] - 2*e, tolva_recta + (e > 0 ? 1 : 0.01)]);
+}
+module tolva() {
+    difference() {
+        union() {
+            tolva_vol(0);
+            // encastre (pollera) que abraza el cuello
+            en_eje_dos() translate([dos_entrada[0] - 5.3, -cuello_ancho/2 - 2.3, H - dos_z])
+                cube([cuello_largo + 4.6, cuello_ancho + 4.6, tolva_socket + 2]);
+        }
+        tolva_vol(2);
+        en_eje_dos() translate([dos_entrada[0] - 3.3, -cuello_ancho/2 - 0.3, H - dos_z - 1])
+            cube([cuello_largo + 0.6, cuello_ancho + 0.6, tolva_socket + 1]);
+    }
+}
+function tolva_tope() = H + tolva_socket + tolva_embudo + tolva_recta;
+module tapa_tolva() {
+    translate([cxL - tolva_arriba[0]/2 - 2, torre_y, tolva_tope()]) difference() {
+        union() {
+            cube([tolva_arriba[0] + 4, tolva_arriba[1] + 4, 3]);
+            translate([4.2, 4.2, -6]) difference() {      // reborde que entra en la tolva
+                cube([tolva_arriba[0] - 4.4, tolva_arriba[1] - 4.4, 6]);
+                translate([2, 2, -1]) cube([tolva_arriba[0] - 8.4, tolva_arriba[1] - 8.4, 8]);
+            }
+        }
+        translate([(tolva_arriba[0] + 4)/2, 12, -1]) cylinder(d=14, h=5);   // agarre
+    }
 }
 
 // ============================================================================
@@ -376,7 +403,8 @@ module pos(nombre, ex=0) {
     if (nombre == "carcasa_der")   translate([modulo_ancho + ex*0.4, 0, 0]) carcasa(1);
     if (nombre == "techo_izq")     translate([0, 0, ex*1.3]) techo(-1);
     if (nombre == "techo_der")     translate([modulo_ancho + ex*0.4, 0, ex*1.3]) techo(1);
-    if (nombre == "tapa_tolva")    translate([modulo_ancho + ex*0.4, 0, H - pared + ex*1.6]) tapa_tolva();
+    if (nombre == "tapa_tolva")    translate([modulo_ancho + ex*0.4, 0, ex*2.2]) tapa_tolva();
+    if (nombre == "tolva")         translate([modulo_ancho + ex*0.4, 0, ex*1.7]) tolva();
     if (nombre == "columna_motor") translate([cxL, cy, pared - ex*0.3]) columna_motor();
     if (nombre == "asiento")       translate([cxL, cy, ex*0.7]) asiento();
     if (nombre == "cubo_rotor")    translate([cxL, cy, pared + col_alto + 1 + ex*0.9]) cubo_rotor();
@@ -392,10 +420,10 @@ module pos(nombre, ex=0) {
     if (nombre == "mate_carga")    translate([modulo_ancho + cxL + ex*0.4, cy, plato_z + 6]) mate_camionero(false);
 }
 
-piezas_ens = ["carcasa_izq", "carcasa_der", "techo_izq", "techo_der", "tapa_tolva",
+piezas_ens = ["carcasa_izq", "carcasa_der", "techo_izq", "techo_der", "tapa_tolva", "tolva",
               "columna_motor", "asiento", "cubo_rotor", "paletas", "cajon", "puerta",
               "plato", "dosificador", "sinfin", "electronica", "mate_limpieza", "mate_carga"];
-colores = ["#222222", "#222222", "#2b2b2b", "#2b2b2b", "#3a3a3a",
+colores = ["#222222", "#222222", "#2b2b2b", "#2b2b2b", "#3a3a3a", "#b8c4b8",
            "#777777", "#555555", "#c0392b", "#e67e22", "#8d6e63", "#90a4ae",
            "#555555", "#cfcfcf", "#f39c12", "#2e8b57", "#1e4d8c", "#1e4d8c"];
 
@@ -446,7 +474,8 @@ else if (pieza == "carcasa_izq")   carcasa(-1);
 else if (pieza == "carcasa_der")   carcasa(1);
 else if (pieza == "techo_izq")     translate([0, 0, H]) mirror([0, 0, 1]) techo(-1);
 else if (pieza == "techo_der")     translate([0, 0, H]) mirror([0, 0, 1]) techo(1);
-else if (pieza == "tapa_tolva")    translate([0, 0, 1]) tapa_tolva();
+else if (pieza == "tapa_tolva")    translate([0, 0, tolva_tope() + 3]) mirror([0, 0, 1]) tapa_tolva();
+else if (pieza == "tolva")         translate([0, 0, tolva_tope()]) mirror([0, 0, 1]) tolva();   // boca de arriba sobre la cama
 else if (pieza == "columna_motor") columna_motor();
 else if (pieza == "asiento")       translate([0, 0, -z_asiento(asiento_r0) + 12]) asiento();
 else if (pieza == "cubo_rotor")    translate([0, 0, cubo_h]) mirror([0, 0, 1]) cubo_rotor();
@@ -455,7 +484,7 @@ else if (pieza == "paleta_corta")  translate([0, 0, paleta_esp/2]) rotate([-90, 
 else if (pieza == "cajon")         translate([0, 0, -cajon_z]) cajon();
 else if (pieza == "puerta")        translate([0, 0, 5.5]) rotate([90, 0, 0]) puerta();
 else if (pieza == "plato")         plato();
-else if (pieza == "dosificador")   translate([0, 0, H - 13]) mirror([0, 0, 1]) cuerpo_dosificador_v1();  // boca de la tolva sobre la cama
+else if (pieza == "dosificador")   translate([0, 0, -(dos_z - 18)]) cuerpo_dosificador_v1();   // con soportes bajo el tubo
 else if (pieza == "sinfin_v1")     sinfin_v1();
 // --- piezas en su posición, para el visor 3D ---
 else if (len(pieza) > 4 && pieza[0] == "p" && pieza[1] == "o" && pieza[2] == "s" && pieza[3] == "_")

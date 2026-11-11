@@ -27,7 +27,7 @@ RPM_MOTOR = 150         # N20 de 6 V ~200 rpm, a ~4 V da ~150 rpm (MEDIR)
 DOSIS_G = 30.0   # mate camionero: tiendas indican 30-40 g de yerba (el plan decía 7-9 g)
 
 # --- Tolva del equipo (volumen aproximado del concepto) ---
-TOLVA_CM3 = 510   # tolva del equipo v1 (mecanica/equipo_v1.scad), aprox.
+TOLVA_CM3 = 480   # tolva removible del equipo v1 (mecanica/equipo_v1.scad), aprox.
 
 
 def main():

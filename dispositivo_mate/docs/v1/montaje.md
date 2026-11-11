@@ -11,6 +11,7 @@ STL en [`mecanica/stl_v1/`](../../mecanica/stl_v1/), ya orientados para imprimir
 | `carcasa_izq`, `carcasa_der` | ASA o PETG negro | 15 % | No | 135 × 230 × 220 mm. Poné los 230 mm a lo largo de la cama. ~10-12 h c/u |
 | `techo_izq`, `techo_der` | ASA o PETG negro | 15 % | No | Se imprimen boca abajo (cara de arriba sobre la cama) |
 | `puerta` | PETG negro | 20 % | No | Pegar acrílico de 2 mm por dentro |
+| `tolva` | PETG **translúcido** | 15 % | No | Boca abajo (la boca de arriba sobre la cama). Translúcido para ver cuánta yerba queda |
 | `tapa_tolva` | PETG negro | 20 % | No | |
 | `asiento` | PETG natural | 30 % | No | |
 | `cubo_rotor` | PETG natural | 100 % | No | Lleva un prisionero M3 |
@@ -18,7 +19,7 @@ STL en [`mecanica/stl_v1/`](../../mecanica/stl_v1/), ya orientados para imprimir
 | `columna_motor` | PETG natural | 30 % | No | |
 | `cajon` | PETG natural | 15 % | No | |
 | `plato` | PETG natural | 30 % | No | |
-| `dosificador` | PETG natural | 20 % | **Sí, solo bajo el tubo** | Se imprime con la boca de la tolva sobre la cama |
+| `dosificador` | PETG natural | 20 % | **Sí, solo bajo el tubo** | Tubo horizontal + cuello hacia la tolva |
 | `sinfin_v1` | PETG natural | 100 % | **Sí** | De pie, 0,16 mm. Lijar hasta que gire libre |
 
 Todas las piezas que tocan yerba van en **PETG natural (sin pigmento)**. Igual, ver
@@ -43,10 +44,12 @@ Todas las piezas que tocan yerba van en **PETG natural (sin pigmento)**. Igual, 
 ## 4. Estación de carga (derecha)
 
 1. Meté el `sinfin_v1` en el tubo del `dosificador` por el lado de la brida.
-2. Pasá un tornillo M3 por el agujero del extremo de arriba: se enrosca en el sinfín y hace de eje. No lo aprietes.
+2. Pasá un tornillo M3 por el agujero del extremo de atrás: se enrosca en el sinfín y hace de eje. No lo aprietes.
 3. Atornillá el **N20** a la brida con el soporte del banco de prueba (`mecanica/stl/soporte_motor.stl`).
-4. Bajá el dosificador por arriba dentro de la torre derecha y fijalo a la pared.
-5. Apoyá el `plato` sobre sus repisas.
+4. Con el techo sacado, bajá el dosificador por arriba: el tubo queda **horizontal sobre el plato**, con la salida justo sobre el centro. Atornillá las orejas a la pared de la torre (2 × M3).
+5. Poné el `techo_der`: el cuello del dosificador asoma por el agujero.
+6. Encastrá la `tolva` sobre el cuello (se apoya en el techo) y poné la `tapa_tolva`.
+7. Apoyá el `plato` sobre sus repisas.
 
 ## 5. Electrónica (torre izquierda)
 

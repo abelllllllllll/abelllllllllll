@@ -11,14 +11,16 @@ Plan de desarrollo del primer prototipo funcional.
 
 Dos estaciones, como una cafetera: a la **izquierda** el mate va **boca abajo** sobre un asiento cónico
 y un rotor con paletas de TPU saca la yerba usada al cajón; a la **derecha** va **boca arriba** y un
-sinfín inclinado le deja **30 g** de yerba nueva.
+sinfín horizontal (arriba del mate) le deja **30 g** de yerba nueva desde una tolva removible.
+
+¿Cómo funciona? Mirá **[docs/v1/como_funciona.md](docs/v1/como_funciona.md)**, con imágenes.
 
 | | |
 |---|---|
-| Medidas | **270 × 230 × 220 mm** (ancho × fondo × alto), dos módulos atornillados |
+| Medidas | **270 × 230 × 220 mm** (ancho × fondo × alto) + tolva arriba hasta **318 mm**; dos módulos atornillados |
 | Mates compatibles | boca o virola de **Ø40 a Ø124 mm**, hasta **130 mm** de alto |
 | Dosis | **30 g** (configurable), ~13 s |
-| Tolva | ~510 cm³ ≈ **5 cebadas** |
+| Tolva | removible, ~480 cm³ ≈ **5 cebadas** |
 | Batería | 2 × 18650 (2S), carga por USB-C |
 | Costo del prototipo | **≈ 100-135 €** |
 
