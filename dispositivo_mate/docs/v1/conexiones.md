@@ -8,7 +8,7 @@
 | 1 | Encoder del sinfín (canal A) | Pull-up interno |
 | 3 | Botón → GND | Pull-up interno; despierta del sueño profundo |
 | 4 | Divisor de batería (100 kΩ arriba / 33 kΩ abajo) | 8,4 V → 2,08 V |
-| 5 | DRV5032 (salida) | LOW = imán cerca = puerta cerrada |
+| 5 | DRV5032 (salida) | LOW = imán cerca = tapa de limpieza cerrada |
 | 6 | DRV8871 IN1 | PWM 20 kHz |
 | 7 | DRV8871 IN2 | PWM 20 kHz |
 | 10 | 74AHCT125 entrada → anillo WS2812 DIN | Resistencia de 330 Ω en serie |
@@ -25,14 +25,14 @@ Quedan libres GPIO 2, 8 y 9 (son pines de arranque: usarlos solo como salidas qu
 ```
 USB-C ──► Cargador 2S (5 V → 8,4 V) ──► BMS 2S ──► 2×18650 en serie (6,0-8,4 V)
                                           │
-                                          └─► Polyfuse 3 A ─┬─► Microinterruptor de puerta ─► DRV8871 VM ─► Motor rotor (JGA25)
+                                          └─► Polyfuse 3 A ─┬─► Microinterruptor de la tapa ─► DRV8871 VM ─► Motor rotor (JGA25)
                                                             ├─► TB6612 VM ─► Motor sinfín (N20)
                                                             ├─► MP1584 (5 V) ─► ESP32 5V, anillo LED, 74AHCT125
                                                             └─► Divisor 100k/33k ─► GPIO 4
 ```
 
-- El **microinterruptor de la puerta** está en serie con la alimentación del motor del rotor:
-  si se abre la puerta, el rotor se detiene **aunque el programa falle**. El sensor Hall avisa además al programa.
+- El **microinterruptor de la tapa de limpieza** está en serie con la alimentación del motor del rotor:
+  si se abre la tapa, el rotor se detiene **aunque el programa falle**. El sensor Hall avisa además al programa.
 - Los motores son de 6 V y la batería llena da 8,4 V: el firmware **limita el PWM** para no pasarse de 6 V.
 - El DRV8871 limita la corriente con una resistencia en el pin ILIM: con **30 kΩ ≈ 2,2 A**
   (fórmula del fabricante: I = 64 / R en kΩ). Medila en tu módulo; muchos traen 30 kΩ.

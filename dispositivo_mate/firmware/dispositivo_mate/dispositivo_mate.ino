@@ -14,10 +14,10 @@
 //  LED (anillo de 12):
 //    blanco suave    reposo              azul girando   limpiando
 //    azul latiendo   dar vuelta el mate  verde girando  cargando yerba
-//    verde fijo      listo               naranja        abrí/cerrá la puerta, vaciá el cajón
+//    verde fijo      listo               naranja        cerrá la tapa, vaciá el cajón
 //    rojo titilando  error (atasco)      rojo 1 LED     batería baja
 //
-//  Monitor serie (115200): "g=0.95" guarda gramos por vuelta, "d=30" guarda la
+//  Monitor serie (115200): "g=1.46" guarda gramos por vuelta, "d=30" guarda la
 //  dosis en gramos, "?" muestra la configuración.
 // ============================================================================
 
@@ -31,7 +31,7 @@ const int PIN_ENC_ROTOR   = 0;   // encoder del motor del rotor (canal A)
 const int PIN_ENC_SINFIN  = 1;   // encoder del N20 del sinfín (canal A)
 const int PIN_BOTON       = 3;   // a GND, pull-up interno (despierta del sueño)
 const int PIN_VBAT        = 4;   // divisor 100k / 33k desde la batería 2S
-const int PIN_PUERTA      = 5;   // DRV5032: LOW = imán cerca = puerta cerrada
+const int PIN_PUERTA      = 5;   // DRV5032: LOW = imán cerca = tapa de limpieza cerrada
 const int PIN_ROTOR_IN1   = 6;   // DRV8871 IN1
 const int PIN_ROTOR_IN2   = 7;   // DRV8871 IN2
 const int PIN_LED         = 10;  // anillo WS2812 (vía 74AHCT125)
@@ -53,7 +53,7 @@ const int      LIMPIEZA_TRAMOS     = 6;      // 15 s en total
 const float    ROTOR_POTENCIA      = 1.0f;   // fracción de 6 V
 
 // Sinfín
-const int   PULSOS_POR_VUELTA      = 7 * 150;   // N20 con encoder 7 PPR y reductora 1:150 (MEDIR)
+const int   PULSOS_POR_VUELTA      = 7 * 298;   // N20 con encoder 7 PPR y reductora 1:298, ~100 rpm (MEDIR)
 const float SINFIN_POTENCIA        = 0.9f;
 const uint32_t ATASCO_MS           = 600;       // sin pulsos durante este tiempo = atasco
 const int   REINTENTOS_ATASCO      = 3;
@@ -68,7 +68,7 @@ Estado estado = REPOSO;
 uint32_t t_estado = 0;
 
 Preferences prefs;
-float gramos_por_vuelta = 0.95f;   // se corrige con la balanza
+float gramos_por_vuelta = 1.46f;   // valor de la simulación; se corrige con la balanza
 float dosis_g           = 30.0f;
 
 Adafruit_NeoPixel anillo(LEDS, PIN_LED, NEO_GRB + NEO_KHZ800);
@@ -256,7 +256,7 @@ void calibrar() {
     gramos_por_vuelta = 1.0f;
     ciclo_carga(20.0f);              // 20 "gramos" de 1 g/vuelta = 20 vueltas
     gramos_por_vuelta = g_antes;
-    Serial.println("Pesá y escribí  g=<gramos pesados / 20>  (ej. g=0.95)");
+    Serial.println("Pesá y escribí  g=<gramos pesados / 20>  (ej. g=1.46)");
 }
 
 // ---------------------------------------------------------------- SERIE
@@ -265,7 +265,7 @@ void leer_serie() {
     String s = Serial.readStringUntil('\n'); s.trim();
     if (s.startsWith("g=")) { gramos_por_vuelta = s.substring(2).toFloat(); prefs.putFloat("gpv", gramos_por_vuelta); }
     else if (s.startsWith("d=")) { dosis_g = s.substring(2).toFloat(); prefs.putFloat("dosis", dosis_g); }
-    Serial.printf("gramos/vuelta=%.3f  dosis=%.1f g  bateria=%.2f V  puerta=%s\n",
+    Serial.printf("gramos/vuelta=%.3f  dosis=%.1f g  bateria=%.2f V  tapa=%s\n",
                   gramos_por_vuelta, dosis_g, leer_vbat(), puerta_cerrada() ? "cerrada" : "abierta");
 }
 

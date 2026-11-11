@@ -30,13 +30,19 @@ $fn = 64;
 // ============================================================================
 //  MEDIDAS GENERALES
 // ============================================================================
-W = 270;          // ancho total (X)
+W = 290;          // ancho total (X)
 D = 230;          // fondo total (Y)
 H = 220;          // alto total (Z)  -> cada módulo entra en impresoras de 220 mm de alto
 pared = 3;
-r_esq = 20;       // radio de las esquinas verticales
+r_esq = 14;       // radio de las esquinas verticales
+techo_h = 12;     // alto de la pieza del techo
 
-modulo_ancho = W / 2;            // dos módulos de 135 mm que se atornillan
+// --- Diseño exterior ---
+nicho_ancho = 118;   // abertura frontal de la estación de carga
+nicho_r     = 18;    // radio de sus esquinas de arriba
+tapa_limp_d = 134;   // tapa redonda de arriba (estación de limpieza)
+
+modulo_ancho = W / 2;            // dos módulos de 145 mm que se atornillan
 cy      = 75;                    // centro (Y) de las dos estaciones
 cxL     = modulo_ancho / 2;      // centro (X) estación de limpieza
 cxR     = modulo_ancho * 1.5;    // centro (X) estación de carga
@@ -78,10 +84,11 @@ dos_salida = 25;             // centro de la salida, medido desde la brida (= ce
 dos_entrada = [100, 145];    // ventana de entrada, medida desde la brida
 // Tolva removible ARRIBA (como un molinillo de café): se saca para llenarla o lavarla.
 tolva_socket = 8;            // encastre sobre el cuello del dosificador
-tolva_embudo = 70;           // alto del embudo
-tolva_recta  = 20;           // alto de la parte recta
-tolva_arriba = [modulo_ancho - 12, D - torre_y - 8];   // boca de arriba (X, Y)
-tubo_di = 23; tubo_de = 27.8; sinfin_d = 21.4; nucleo_d = 9; paso = 24; aleta_ang = 40;
+tolva_embudo = 40;           // alto del cono
+tolva_recta  = 55;           // alto del cilindro
+tolva_d      = 108;          // diámetro del cilindro
+// Sinfín: medidas de la "receta" que sale de calculos/simulacion.py
+tubo_di = 25.6; tubo_de = 30.4; sinfin_d = 24; nucleo_d = 8; paso = 30; aleta_ang = 40;
 sinfin_largo = dos_largo - 8;
 
 // ============================================================================
@@ -101,19 +108,20 @@ module caja_r(x, y, z, r) {
     hull() for (i=[r, x-r], j=[r, y-r]) translate([i, j, 0]) cylinder(r=r, h=z);
 }
 // esquinas redondeadas solo del lado exterior de cada módulo
-module bloque_modulo(lado) {   // lado = -1 izquierdo, +1 derecho
+module perfil(lado) {   // 2D. lado = -1 izquierdo, +1 derecho
     hull() {
         if (lado < 0) {
-            translate([r_esq, r_esq, 0]) cylinder(r=r_esq, h=H);
-            translate([r_esq, D - r_esq, 0]) cylinder(r=r_esq, h=H);
-            translate([modulo_ancho - 1, 0, 0]) cube([1, D, H]);
+            translate([r_esq, r_esq]) circle(r=r_esq);
+            translate([r_esq, D - r_esq]) circle(r=r_esq);
+            translate([modulo_ancho - 1, 0]) square([1, D]);
         } else {
-            translate([0, 0, 0]) cube([1, D, H]);
-            translate([modulo_ancho - r_esq, r_esq, 0]) cylinder(r=r_esq, h=H);
-            translate([modulo_ancho - r_esq, D - r_esq, 0]) cylinder(r=r_esq, h=H);
+            square([1, D]);
+            translate([modulo_ancho - r_esq, r_esq]) circle(r=r_esq);
+            translate([modulo_ancho - r_esq, D - r_esq]) circle(r=r_esq);
         }
     }
 }
+module bloque_modulo(lado, alto=H) { linear_extrude(height=alto) perfil(lado); }
 module agujero_D(d, plano, largo) {
     intersection() {
         cylinder(d=d, h=largo);
@@ -124,28 +132,32 @@ module agujero_D(d, plano, largo) {
 // ============================================================================
 //  CARCASAS (se imprimen sin techo; el techo es otra pieza)
 // ============================================================================
+cajon_x0 = r_esq + 2;  cajon_x1 = modulo_ancho - pared - 2;
 module carcasa(lado) {
     difference() {
-        bloque_modulo(lado);
-        // hueco general
-        translate([lado < 0 ? pared : -1, pared, pared])
-            cube([modulo_ancho - pared + 1, D - 2*pared, H]);
-        // frente abierto de la estación (nicho)
-        translate([lado < 0 ? pared : -1, -1, pared])
-            cube([modulo_ancho - pared + 1, pared + 2, H - 2*pared - 12]);
-        // pared lateral de unión: agujeros M3 para atornillar los módulos
-        for (y=[30, 100, 180], z=[20, 110, 200])
+        bloque_modulo(lado, H - techo_h);
+        // hueco general (la pared sigue la curva de las esquinas)
+        translate([0, 0, pared]) linear_extrude(height=H) offset(delta=-pared) perfil(lado);
+        // derecha: nicho frontal con esquinas redondeadas
+        if (lado > 0) hull() {
+            // el borde de arriba queda justo debajo del tubo: tapa el sinfín y su motor
+            for (sx=[-1, 1]) translate([cxL + sx*(nicho_ancho/2 - nicho_r), -1, dos_z - tubo_de/2 + 2 - nicho_r])
+                rotate([-90, 0, 0]) cylinder(r=nicho_r, h=pared + 2);
+            translate([cxL - nicho_ancho/2, -1, pared]) cube([nicho_ancho, pared + 2, 1]);
+        }
+        // izquierda: solo la boca del cajón (el mate entra por arriba)
+        if (lado < 0) translate([cajon_x0 - 0.5, -1, cajon_z - 0.5])
+            cube([cajon_x1 - cajon_x0 + 1, pared + 2, cajon_h + 1]);
+        // unión entre módulos: agujeros M3
+        for (y=[30, 100, 180], z=[20, 110, 195])
             translate([lado < 0 ? modulo_ancho - pared - 1 : -1, y, z]) rotate([0, 90, 0])
                 cylinder(d=3.3, h=pared + 2);
         // USB-C atrás (módulo izquierdo)
         if (lado < 0) translate([60, D - pared - 1, 40]) cube([10, pared + 2, 5]);
-        // pasaje del sinfín por la pared entre nicho y torre (derecho)
     }
-    // pared interior lateral (cierra el módulo del lado de la unión)
-    translate([lado < 0 ? modulo_ancho - pared : 0, 0, 0]) cube([pared, D, H - 12]);
-    // pared entre nicho y torre
+    // pared entre estación y torre
     difference() {
-        translate([lado < 0 ? pared : 0, torre_y, pared]) cube([modulo_ancho - pared, pared, H - 2*pared - 12]);
+        translate([pared, torre_y, pared]) cube([modulo_ancho - 2*pared, pared, H - techo_h - pared]);
         if (lado > 0) cuerpo_dos_hueco();  // paso del tubo
     }
     // repisas que sostienen el asiento / el plato
@@ -159,25 +171,37 @@ module carcasa(lado) {
     if (lado < 0) translate([cxL - 4, cy, pared]) cube([8, torre_y - cy, cajon_z + cajon_h - pared]);
 }
 
-// Techos
+// Techos (tapas de arriba de cada módulo)
 module techo(lado) {
     difference() {
-        intersection() {
-            bloque_modulo(lado);
-            translate([-1, -1, H - 12]) cube([modulo_ancho + 2, D + 2, 13]);
-        }
-        translate([lado < 0 ? pared : pared, pared, H - 12 - 1])
-            cube([modulo_ancho - 2*pared, D - 2*pared, 12 - pared + 1]);
+        translate([0, 0, H - techo_h]) bloque_modulo(lado, techo_h);
+        translate([0, 0, H - techo_h - 1]) linear_extrude(height=techo_h - pared + 1) offset(delta=-pared) perfil(lado);
         if (lado > 0) {
             // botón + anillo LED
             translate([cxL, 28, H - pared - 1]) cylinder(d=32, h=pared + 2);
             // paso del cuello del dosificador (la tolva se apoya encima)
             en_eje_dos() translate([dos_entrada[0] - 3.5, -14.5, 0]) cube([dos_entrada[1] - dos_entrada[0] + 7, 29, 40]);
         } else {
+            // boca redonda por donde entra el mate + rebaje para la tapa
+            translate([cxL, cy, H - pared - 1]) cylinder(d=tapa_limp_d - 7, h=pared + 2);
+            translate([cxL, cy, H - 1.6]) cylinder(d=tapa_limp_d + 0.6, h=2);
+            // muesca para levantar la tapa con el dedo
+            translate([cxL, cy - tapa_limp_d/2, H - 1.6]) cylinder(d=20, h=2);
             // porta-bombilla y cepillo
-            translate([22, D - 25, H - pared - 1]) cylinder(d=16, h=pared + 2);
-            translate([46, D - 25, H - pared - 1]) cylinder(d=16, h=pared + 2);
+            for (x=[cxL - 14, cxL + 14]) translate([x, D - 28, H - pared - 1]) cylinder(d=16, h=pared + 2);
         }
+    }
+}
+// Tapa redonda de la estación de limpieza (lleva el imán del sensor)
+module tapa_limpieza() {
+    translate([cxL, cy, H - 1.6]) cylinder(d=tapa_limp_d, h=1.6);
+    translate([cxL, cy, H - 1.6 - 5]) difference() {
+        cylinder(d=tapa_limp_d - 7.6, h=5);
+        translate([0, 0, -1]) cylinder(d=tapa_limp_d - 12, h=7);
+    }
+    // alojamiento del imán Ø6x3
+    translate([cxL + tapa_limp_d/2 - 12, cy, H - 1.6 - 4]) difference() {
+        cylinder(d=10, h=4); translate([0, 0, -0.1]) cylinder(d=6.2, h=3.1);
     }
 }
 
@@ -247,8 +271,8 @@ module paleta(alto) {
 
 // Cajón de residuos en "U": sale por el frente rodeando la columna
 module cajon() {
-    x0 = pared + 2; x1 = modulo_ancho - pared - 2;
-    y0 = 2; y1 = torre_y - 2;
+    x0 = cajon_x0; x1 = cajon_x1;
+    y0 = 0; y1 = torre_y - 2;     // el frente queda al ras de la carcasa
     ranura = col_d + 6;
     difference() {
         translate([x0, y0, cajon_z]) cube([x1 - x0, y1 - y0, cajon_h]);
@@ -256,6 +280,8 @@ module cajon() {
         // ranura hacia atrás para la columna y su nervio
         translate([cxL - ranura/2, cy - ranura/2, cajon_z - 1]) cube([ranura, y1 - cy + ranura, cajon_h + 2]);
         translate([cxL, cy, cajon_z - 1]) cylinder(d=ranura, h=cajon_h + 2);
+        // tirador: muesca para el dedo en el borde de arriba del frente
+        hull() for (sx=[-1, 1]) translate([cxL + sx*14, -1, cajon_z + cajon_h]) rotate([-90, 0, 0]) cylinder(r=8, h=4);
     }
     // paredes de la ranura
     difference() {
@@ -266,21 +292,6 @@ module cajon() {
         translate([cxL - ranura/2, cy, cajon_z - 1]) cube([ranura, y1 - cy + 1, cajon_h + 2]);
         translate([cxL, cy, cajon_z - 1]) cylinder(d=ranura, h=cajon_h + 2);
     }
-    // manija
-    translate([cxL - 20, y0 - 8, cajon_z + cajon_h - 14]) cube([40, 10, 4]);
-}
-
-// Puerta frontal de la estación de limpieza (bisagra a la izquierda, imán + sensor)
-module puerta() {
-    difference() {
-        translate([pared, -4, pared + 1]) cube([modulo_ancho - pared - 1, 4, H - 2*pared - 14]);
-        // ventana (pegar un acrílico de 2 mm por dentro)
-        translate([pared + 18, -5, 70]) cube([modulo_ancho - pared - 37, 6, 110]);
-        // alojamiento del imán Ø6x3
-        translate([modulo_ancho - 10, -1.5, 120]) rotate([-90, 0, 0]) cylinder(d=6.2, h=3);
-    }
-    // nudillos de bisagra
-    for (z=[30, 170]) translate([pared + 2, -2, z]) cylinder(d=7, h=20);
 }
 
 // ============================================================================
@@ -329,16 +340,16 @@ module cuerpo_dosificador_v1() {
         }
     }
 }
-// Tolva removible: se encastra sobre el cuello y se apoya en el techo
+// Tolva removible cilíndrica: se encastra sobre el cuello y se apoya en el techo
+tolva_c = [cxL, dos_y_brida + (dos_entrada[0] + dos_entrada[1])/2];
 module tolva_vol(e) {
     z0 = H + tolva_socket;
     hull() {
         en_eje_dos() translate([dos_entrada[0] + e - (e > 0 ? 0 : 3), -9 + e - (e > 0 ? 0 : 3), z0 - dos_z - (e > 0 ? 1 : 0)])
             cube([dos_entrada[1] - dos_entrada[0] - 2*e + (e > 0 ? 0 : 6), 18 - 2*e + (e > 0 ? 0 : 6), 0.01]);
-        translate([cxL - tolva_arriba[0]/2 + e, torre_y + 2 + e, z0 + tolva_embudo]) cube([tolva_arriba[0] - 2*e, tolva_arriba[1] - 2*e, 0.01]);
+        translate([tolva_c[0], tolva_c[1], z0 + tolva_embudo]) cylinder(d=tolva_d - 2*e, h=0.01);
     }
-    translate([cxL - tolva_arriba[0]/2 + e, torre_y + 2 + e, z0 + tolva_embudo - 0.01])
-        cube([tolva_arriba[0] - 2*e, tolva_arriba[1] - 2*e, tolva_recta + (e > 0 ? 1 : 0.01)]);
+    translate([tolva_c[0], tolva_c[1], z0 + tolva_embudo - 0.01]) cylinder(d=tolva_d - 2*e, h=tolva_recta + (e > 0 ? 1 : 0.01));
 }
 module tolva() {
     difference() {
@@ -355,15 +366,12 @@ module tolva() {
 }
 function tolva_tope() = H + tolva_socket + tolva_embudo + tolva_recta;
 module tapa_tolva() {
-    translate([cxL - tolva_arriba[0]/2 - 2, torre_y, tolva_tope()]) difference() {
-        union() {
-            cube([tolva_arriba[0] + 4, tolva_arriba[1] + 4, 3]);
-            translate([4.2, 4.2, -6]) difference() {      // reborde que entra en la tolva
-                cube([tolva_arriba[0] - 4.4, tolva_arriba[1] - 4.4, 6]);
-                translate([2, 2, -1]) cube([tolva_arriba[0] - 8.4, tolva_arriba[1] - 8.4, 8]);
-            }
+    translate([tolva_c[0], tolva_c[1], tolva_tope()]) {
+        cylinder(d=tolva_d, h=3);
+        translate([0, 0, -5]) difference() {      // reborde que entra en la tolva
+            cylinder(d=tolva_d - 4.5, h=5);
+            translate([0, 0, -1]) cylinder(d=tolva_d - 9, h=7);
         }
-        translate([(tolva_arriba[0] + 4)/2, 12, -1]) cylinder(d=14, h=5);   // agarre
     }
 }
 
@@ -411,7 +419,7 @@ module pos(nombre, ex=0) {
     if (nombre == "paletas")       translate([cxL, cy, pared + col_alto + 1 + cubo_h + ex*1.1])
                                        for (a=[0, 120, 240]) rotate([0, 0, a]) paleta(paleta_larga);
     if (nombre == "cajon")         translate([0, -ex*1.2, 0]) cajon();
-    if (nombre == "puerta")        translate([0, -ex*1.0, 0]) puerta();
+    if (nombre == "tapa_limpieza") translate([0, 0, ex*2.0]) tapa_limpieza();
     if (nombre == "plato")         translate([modulo_ancho + cxL + ex*0.4, cy, plato_z + ex*0.3]) plato();
     if (nombre == "dosificador")   translate([modulo_ancho + ex*0.4, 0, ex*0.6]) cuerpo_dosificador_v1();
     if (nombre == "sinfin")        translate([modulo_ancho + ex*0.4, 0, ex*0.6]) en_eje_dos() translate([1, 0, 0]) rotate([0, 90, 0]) sinfin_v1();
@@ -420,24 +428,31 @@ module pos(nombre, ex=0) {
     if (nombre == "mate_carga")    translate([modulo_ancho + cxL + ex*0.4, cy, plato_z + 6]) mate_camionero(false);
 }
 
-piezas_ens = ["carcasa_izq", "carcasa_der", "techo_izq", "techo_der", "tapa_tolva", "tolva",
-              "columna_motor", "asiento", "cubo_rotor", "paletas", "cajon", "puerta",
-              "plato", "dosificador", "sinfin", "electronica", "mate_limpieza", "mate_carga"];
-colores = ["#222222", "#222222", "#2b2b2b", "#2b2b2b", "#3a3a3a", "#b8c4b8",
-           "#777777", "#555555", "#c0392b", "#e67e22", "#8d6e63", "#90a4ae",
-           "#555555", "#cfcfcf", "#f39c12", "#2e8b57", "#1e4d8c", "#1e4d8c"];
+// Primero las piezas opacas y al final las translúcidas (así se ve el interior)
+piezas_ens = ["columna_motor", "asiento", "cubo_rotor", "paletas", "cajon",
+              "plato", "dosificador", "sinfin", "electronica", "tapa_tolva",
+              "mate_limpieza", "mate_carga", "tolva",
+              "carcasa_izq", "carcasa_der", "techo_izq", "techo_der", "tapa_limpieza"];
+colores = ["#777777", "#555555", "#c0392b", "#e67e22", "#1c1c1e",
+           "#3a3a3c", "#cfcfcf", "#f39c12", "#2e8b57", "#2c2c2e",
+           "#1e4d8c", "#1e4d8c", "#7d8a8f",
+           "#1c1c1e", "#1c1c1e", "#1c1c1e", "#1c1c1e", "#2c2c2e"];
 
-module ensamble(ex=0, corte=false) {
+// modo: "fantasma" (carcasa translúcida), "opaco" (como se ve de verdad) o "corte"
+module ensamble(ex=0, modo="fantasma") {
+    corte = modo == "corte";
     for (i=[0:len(piezas_ens)-1]) {
         n = piezas_ens[i];
-        transparente = (n == "carcasa_izq" || n == "carcasa_der" || n == "puerta" || n == "techo_izq" || n == "techo_der");
+        cascara = (n == "carcasa_izq" || n == "carcasa_der" || n == "techo_izq" || n == "techo_der" || n == "tapa_limpieza");
         esmate = (n == "mate_limpieza" || n == "mate_carga");
-        if (!(corte && (n == "puerta" || n == "techo_izq" || n == "techo_der" || n == "tapa_tolva")))
-            color(colores[i], transparente ? 0.3 : (esmate ? 0.35 : 1))
+        alfa = n == "tolva" ? 0.55 : (modo == "opaco" ? 1 : (cascara ? 0.3 : (esmate ? 0.4 : 1)));
+        if (!(corte && (n == "techo_izq" || n == "techo_der" || n == "tapa_limpieza")) &&
+            !(modo == "opaco" && n == "mate_limpieza"))
+            color(colores[i], alfa)
                 difference() {
                     pos(n, ex);
                     // corte: se saca la mitad delantera de carcasas y cajón
-                    if (corte && (transparente || n == "cajon"))
+                    if (corte && (cascara || n == "cajon"))
                         translate([-1, -50, -1]) cube([W + 2, cy + 50, H + 200]);
                 }
     }
@@ -467,7 +482,8 @@ module sinfin_v1() {
 //  SELECCIÓN
 // ============================================================================
 if (pieza == "ensamble")        ensamble();
-else if (pieza == "ensamble_corte") ensamble(0, true);
+else if (pieza == "ensamble_corte") ensamble(0, "corte");
+else if (pieza == "ensamble_opaco") ensamble(0, "opaco");
 else if (pieza == "explotado")  ensamble(60);
 // --- piezas para imprimir (orientación de impresión) ---
 else if (pieza == "carcasa_izq")   carcasa(-1);
@@ -482,7 +498,7 @@ else if (pieza == "cubo_rotor")    translate([0, 0, cubo_h]) mirror([0, 0, 1]) c
 else if (pieza == "paleta_larga")  translate([0, 0, paleta_esp/2]) rotate([-90, 0, 0]) paleta(paleta_larga);
 else if (pieza == "paleta_corta")  translate([0, 0, paleta_esp/2]) rotate([-90, 0, 0]) paleta(paleta_corta);
 else if (pieza == "cajon")         translate([0, 0, -cajon_z]) cajon();
-else if (pieza == "puerta")        translate([0, 0, 5.5]) rotate([90, 0, 0]) puerta();
+else if (pieza == "tapa_limpieza") translate([0, 0, H]) mirror([0, 0, 1]) tapa_limpieza();
 else if (pieza == "plato")         plato();
 else if (pieza == "dosificador")   translate([0, 0, -(dos_z - 18)]) cuerpo_dosificador_v1();   // con soportes bajo el tubo
 else if (pieza == "sinfin_v1")     sinfin_v1();

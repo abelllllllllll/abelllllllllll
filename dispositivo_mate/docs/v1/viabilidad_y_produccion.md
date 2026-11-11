@@ -18,7 +18,7 @@
 
 **Límites conocidos:**
 - El usuario tiene que **dar vuelta el mate** entre limpieza y carga (único paso manual).
-- La tolva alcanza para **~5 cebadas de 30 g**.
+- La tolva alcanza para **~6 cebadas de 30 g**.
 - Hay que **vaciar el cajón cada ~2-3 ciclos** (estimado).
 - Mates de más de 130 mm o virolas de más de 124 mm no entran: hay que cambiar `H` o el asiento.
 

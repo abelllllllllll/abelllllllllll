@@ -8,16 +8,16 @@ STL en [`mecanica/stl_v1/`](../../mecanica/stl_v1/), ya orientados para imprimir
 
 | Pieza | Material | Relleno | Soportes | Notas |
 |---|---|---|---|---|
-| `carcasa_izq`, `carcasa_der` | ASA o PETG negro | 15 % | No | 135 × 230 × 220 mm. Poné los 230 mm a lo largo de la cama. ~10-12 h c/u |
+| `carcasa_izq`, `carcasa_der` | ASA o PETG negro | 15 % | No | 145 × 230 × 208 mm. Poné los 230 mm a lo largo de la cama. ~10-12 h c/u |
 | `techo_izq`, `techo_der` | ASA o PETG negro | 15 % | No | Se imprimen boca abajo (cara de arriba sobre la cama) |
-| `puerta` | PETG negro | 20 % | No | Pegar acrílico de 2 mm por dentro |
-| `tolva` | PETG **translúcido** | 15 % | No | Boca abajo (la boca de arriba sobre la cama). Translúcido para ver cuánta yerba queda |
+| `tapa_limpieza` | PETG negro | 20 % | No | Tapa redonda de arriba; boca abajo sobre la cama |
+| `tolva` | PETG **translúcido ahumado** | 15 % | No | Cilíndrica. Boca abajo (la boca de arriba sobre la cama). Translúcida para ver cuánta yerba queda |
 | `tapa_tolva` | PETG negro | 20 % | No | |
 | `asiento` | PETG natural | 30 % | No | |
 | `cubo_rotor` | PETG natural | 100 % | No | Lleva un prisionero M3 |
 | `paleta_larga` ×3, `paleta_corta` ×3 | **TPU 85-95A** | 100 % | No | Acostadas. Usá un set u otro según el mate |
 | `columna_motor` | PETG natural | 30 % | No | |
-| `cajon` | PETG natural | 15 % | No | |
+| `cajon` | PETG negro | 15 % | No | El frente queda al ras de la carcasa |
 | `plato` | PETG natural | 30 % | No | |
 | `dosificador` | PETG natural | 20 % | **Sí, solo bajo el tubo** | Tubo horizontal + cuello hacia la tolva |
 | `sinfin_v1` | PETG natural | 100 % | **Sí** | De pie, 0,16 mm. Lijar hasta que gire libre |
@@ -38,8 +38,8 @@ Todas las piezas que tocan yerba van en **PETG natural (sin pigmento)**. Igual, 
 3. Encastrá las 3 **paletas** en el `cubo_rotor` y metelo en el eje. Apretá el prisionero M3 contra la cara plana.
 4. Apoyá el `asiento` sobre las 4 repisas. Tiene que quedar **centrado con el rotor** y sin tocarlo.
 5. Meté el `cajon` por el frente: la ranura en U rodea la columna.
-6. Colocá la `puerta` con 2 varillas de Ø3 como bisagra. Pegá el imán Ø6 × 3 en su hueco.
-7. Montá el **microinterruptor** y el **sensor Hall** en la pared, frente al imán: con la puerta cerrada, el micro tiene que hacer clic.
+6. Pegá el imán Ø6 × 3 en el hueco de la `tapa_limpieza`.
+7. Montá el **microinterruptor** y el **sensor Hall** debajo del `techo_izq`, junto al borde de la boca: con la tapa puesta, el micro tiene que hacer clic.
 
 ## 4. Estación de carga (derecha)
 
@@ -63,9 +63,9 @@ Seguí [conexiones.md](conexiones.md). Orden recomendado:
 
 ## 6. Primeras pruebas
 
-1. Abrí el monitor serie a 115200 y escribí `?`: tiene que mostrar batería y puerta.
+1. Abrí el monitor serie a 115200 y escribí `?`: tiene que mostrar batería y tapa.
 2. Con la tolva vacía, tocá el botón dos veces seguidas: el sinfín debe girar sin trabarse.
 3. **Calibración**: llená la tolva, poné un vaso en el plato sobre una balanza y mantené el botón **6 s**.
    Gira 20 vueltas. Pesá y escribí `g=<gramos/20>`.
-4. Con un mate usado boca abajo, cerrá la puerta y tocá el botón una vez.
+4. Meté un mate usado boca abajo **por arriba**, poné la tapa y tocá el botón una vez.
 5. Anotá los resultados en la tabla de [la Fase 2](../fase2_banco_dosificador.md).

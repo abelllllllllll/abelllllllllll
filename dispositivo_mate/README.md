@@ -5,11 +5,11 @@ Plan de desarrollo del primer prototipo funcional.
 > Estado: **equipo v1 genérico diseñado** (todas las piezas, lista de materiales, conexiones y firmware).
 > **Nada está probado todavía.** El siguiente paso es imprimir y probar el rotor de limpieza y el dosificador.
 
-![Equipo v1 en corte](mecanica/imagenes/v1_corte.png)
+![Equipo v1](mecanica/imagenes/v1_ensamble.png)
 
 ## Equipo v1 (genérico, para todos los mates)
 
-Dos estaciones, como una cafetera: a la **izquierda** el mate va **boca abajo** sobre un asiento cónico
+Dos estaciones, como una cafetera: a la **izquierda** el mate entra **por arriba, boca abajo**, sobre un asiento cónico
 y un rotor con paletas de TPU saca la yerba usada al cajón; a la **derecha** va **boca arriba** y un
 sinfín horizontal (arriba del mate) le deja **30 g** de yerba nueva desde una tolva removible.
 
@@ -17,16 +17,18 @@ sinfín horizontal (arriba del mate) le deja **30 g** de yerba nueva desde una t
 
 | | |
 |---|---|
-| Medidas | **270 × 230 × 220 mm** (ancho × fondo × alto) + tolva arriba hasta **318 mm**; dos módulos atornillados |
+| Medidas | **290 × 230 × 220 mm** (ancho × fondo × alto) + tolva arriba hasta **326 mm**; dos módulos atornillados |
 | Mates compatibles | boca o virola de **Ø40 a Ø124 mm**, hasta **130 mm** de alto |
-| Dosis | **30 g** (configurable), ~13 s |
-| Tolva | removible, ~480 cm³ ≈ **5 cebadas** |
+| Dosis | **30 g** (configurable), ~15 s |
+| Tolva | cilíndrica y removible, ~600 cm³ ≈ **6 cebadas** |
 | Batería | 2 × 18650 (2S), carga por USB-C |
 | Costo del prototipo | **≈ 100-135 €** |
 
 | Documento | Qué contiene |
 |---|---|
 | [`docs/v1/viabilidad_y_produccion.md`](docs/v1/viabilidad_y_produccion.md) | **¿Es viable?** y qué falta para producirlo |
+| [`docs/v1/receta.md`](docs/v1/receta.md) | **La receta**: medidas y tiempos que salen de la simulación |
+| [`calculos/simulacion.py`](calculos/simulacion.py) | La simulación (dosis, fuerza del motor, limpieza, batería) |
 | [`docs/v1/lista_materiales.md`](docs/v1/lista_materiales.md) | Qué comprar, con precios orientativos |
 | [`docs/v1/conexiones.md`](docs/v1/conexiones.md) | Pines, alimentación y seguridad |
 | [`docs/v1/montaje.md`](docs/v1/montaje.md) | Cómo imprimir cada pieza y armar el equipo |

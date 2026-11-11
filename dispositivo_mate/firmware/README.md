@@ -15,7 +15,7 @@
 ## Qué hace
 
 - Máquina de estados: reposo → limpieza → esperar que des vuelta el mate → carga → listo.
-- **Seguridad**: no limpia con la puerta abierta y frena el rotor si se abre (además del corte por hardware).
+- **Seguridad**: no limpia con la tapa abierta y frena el rotor si se abre (además del corte por hardware).
 - **Atascos**: si el sinfín deja de girar, retrocede media vuelta y reintenta 3 veces; si el rotor se frena, cambia de sentido.
 - **Dosis por vueltas** (encoder), con antigoteo al final.
 - **Batería**: no arranca por debajo de 6,6 V y avisa por debajo de 7,0 V.
@@ -25,7 +25,7 @@
 
 | Constante | Valor por defecto | Cómo medirla |
 |---|---|---|
-| `PULSOS_POR_VUELTA` | 7 × 150 | Pulsos del encoder × reducción del N20 que compres |
-| `gramos_por_vuelta` | 0,95 | Calibración con balanza (mantener el botón 6 s) |
+| `PULSOS_POR_VUELTA` | 7 × 298 | Pulsos del encoder × reducción del N20 que compres |
+| `gramos_por_vuelta` | 1,46 | Calibración con balanza (mantener el botón 6 s) |
 | `dosis_g` | 30 | `d=30` por el monitor serie |
 | `LIMPIEZA_TRAMO_MS`, `LIMPIEZA_TRAMOS` | 2,5 s × 6 | Según cuánto tarde en limpiar |

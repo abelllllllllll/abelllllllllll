@@ -10,24 +10,24 @@ Todos los valores marcados (MEDIR) son estimaciones: medilos.
 import math
 
 # --- Sinfín (igual que en mecanica/dispositivo_mate.scad) ---
-SINFIN_D = 21.4      # mm
-NUCLEO_D = 9.0       # mm
-PASO = 24.0          # mm
+SINFIN_D = 24.0      # mm
+NUCLEO_D = 8.0       # mm
+PASO = 30.0          # mm
 ALETA_ANG = 40       # grados
 
 # --- Yerba (MEDIR) ---
 DENSIDAD_YERBA = 0.30   # g/cm3: llená un vaso medidor de 100 cm3 sin apretar y pesalo
-EFICIENCIA = 0.5        # fracción del volumen que realmente se llena (0,4-0,6)
+EFICIENCIA = 0.455      # igual que calculos/simulacion.py a 85 rpm (0,4-0,6)
 GRAMOS_POR_VUELTA_MEDIDO = None   # p. ej. 0.62 después de la prueba
 
 # --- Motor (MEDIR) ---
-RPM_MOTOR = 150         # N20 de 6 V ~200 rpm, a ~4 V da ~150 rpm (MEDIR)
+RPM_MOTOR = 85          # N20 de 6 V y 100 rpm (1:298), con carga ~85 rpm (MEDIR)
 
 # --- Objetivo ---
 DOSIS_G = 30.0   # mate camionero: tiendas indican 30-40 g de yerba (el plan decía 7-9 g)
 
 # --- Tolva del equipo (volumen aproximado del concepto) ---
-TOLVA_CM3 = 480   # tolva removible del equipo v1 (mecanica/equipo_v1.scad), aprox.
+TOLVA_CM3 = 600   # tolva cilíndrica del equipo v1 (mecanica/equipo_v1.scad), aprox.
 
 
 def main():

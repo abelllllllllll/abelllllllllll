@@ -57,11 +57,11 @@ n20_eje_plano= 2.5;   // medida a través de la cara plana
 n20_eje_largo= 10.0;
 
 // --- Dosificador (sinfín) ---
-tubo_di      = 23.0;  // interior del tubo donde gira el sinfín
+tubo_di      = 25.6;  // interior del tubo donde gira el sinfín
 tubo_pared   = 2.4;
-sinfin_d     = 21.4;  // diámetro exterior del sinfín (1,6 mm de luz total)
-nucleo_d     = 9.0;   // núcleo central del sinfín
-paso         = 24.0;  // avance por vuelta (24 para dosis grandes de camionero)
+sinfin_d     = 24.0;  // diámetro exterior del sinfín (1,6 mm de luz total)
+nucleo_d     = 8.0;   // núcleo central del sinfín
+paso         = 30.0;  // avance por vuelta (24 para dosis grandes de camionero)
 aleta_ang    = 40;    // grosor de la aleta en grados (=> paso*40/360 = 2 mm)
 cubo_largo   = 8.0;   // tramo liso del lado del motor
 sinfin_largo = 110.0; // largo total del sinfín
