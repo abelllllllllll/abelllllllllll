@@ -5,10 +5,13 @@
 //  Librería: Adafruit NeoPixel
 //
 //  BOTÓN (único):
-//    toque corto  en reposo        -> ciclo completo (limpiar -> dar vuelta -> cargar)
+//    toque corto, tapa puesta      -> ciclo completo (limpiar 20 s -> dar vuelta -> cargar)
+//    toque corto, sin tapa         -> solo cargar yerba (mate nuevo, sin limpiar)
+//    mantener 2 s, tapa puesta     -> ciclo con LIMPIEZA LARGA de 40 s (yerba seca o mate dulce)
 //    toque corto  esperando vuelta -> cargar yerba
-//    doble toque  en reposo        -> solo cargar yerba
-//    mantener 2 s                  -> cancelar / apagar
+//    doble toque  en reposo        -> cambia el tamaño de la dosis: chica / mediana / grande
+//                                     (el anillo muestra 4, 8 o 12 luces)
+//    mantener 2 s durante un ciclo -> cancelar
 //    mantener 6 s en reposo        -> calibración (gira 20 vueltas del sinfín)
 //
 //  LED (anillo de 12):
@@ -49,7 +52,8 @@ const float VBAT_MAX_MOTOR   = 6.0f;        // motores de 6 V: limitar el PWM
 
 // Limpieza
 const uint32_t LIMPIEZA_TRAMO_MS   = 2500;   // cambia de sentido cada tramo
-const int      LIMPIEZA_TRAMOS     = 6;      // 15 s en total
+const int      LIMPIEZA_TRAMOS     = 8;      // 20 s en total (la simulación pide 20 s para calabaza)
+const int      LIMPIEZA_TRAMOS_LARGA = 16;   // 40 s: yerba seca, reposada o mate dulce
 const float    ROTOR_POTENCIA      = 1.0f;   // fracción de 6 V
 
 // Sinfín
@@ -69,7 +73,9 @@ uint32_t t_estado = 0;
 
 Preferences prefs;
 float gramos_por_vuelta = 1.46f;   // valor de la simulación; se corrige con la balanza
-float dosis_g           = 30.0f;
+float perfiles[3]       = {20.0f, 30.0f, 40.0f};   // dosis chica, mediana y grande (g)
+int   perfil            = 1;
+float dosis_g           = 30.0f;                   // = perfiles[perfil]
 
 Adafruit_NeoPixel anillo(LEDS, PIN_LED, NEO_GRB + NEO_KHZ800);
 
@@ -185,9 +191,9 @@ void dormir() {
 
 // ---------------------------------------------------------------- CICLOS
 // Limpieza: el rotor gira alternando el sentido. Si no gira (encoder quieto) = traba.
-bool ciclo_limpieza() {
+bool ciclo_limpieza(int tramos) {
     cambiar(LIMPIANDO);
-    for (int tramo = 0; tramo < LIMPIEZA_TRAMOS; tramo++) {
+    for (int tramo = 0; tramo < tramos; tramo++) {
         int sentido = (tramo % 2 == 0) ? 1 : -1;
         uint32_t t0 = millis(), t_ult_pulso = millis(), ult = pulsos_rotor;
         rotor(sentido);
@@ -259,12 +265,28 @@ void calibrar() {
     Serial.println("Pesá y escribí  g=<gramos pesados / 20>  (ej. g=1.46)");
 }
 
+// ---------------------------------------------------------------- TAMAÑO DE DOSIS
+void elegir_perfil(int p) {
+    perfil = p;
+    dosis_g = perfiles[perfil];
+    prefs.putInt("perfil", perfil);
+    for (int i = 0; i < LEDS; i++) anillo.setPixelColor(i, i < (perfil + 1) * 4 ? col(0, 200, 30) : 0);
+    anillo.show();
+    delay(900);
+}
+
 // ---------------------------------------------------------------- SERIE
 void leer_serie() {
     if (!Serial.available()) return;
     String s = Serial.readStringUntil('\n'); s.trim();
     if (s.startsWith("g=")) { gramos_por_vuelta = s.substring(2).toFloat(); prefs.putFloat("gpv", gramos_por_vuelta); }
-    else if (s.startsWith("d=")) { dosis_g = s.substring(2).toFloat(); prefs.putFloat("dosis", dosis_g); }
+    else if (s.startsWith("d=")) {                 // cambia los gramos del tamaño elegido
+        dosis_g = perfiles[perfil] = s.substring(2).toFloat();
+        prefs.putFloat(perfil == 0 ? "d0" : perfil == 1 ? "d1" : "d2", dosis_g);
+    }
+    else if (s.startsWith("p=")) { elegir_perfil(constrain((int)s.substring(2).toFloat(), 0, 2)); }
+    Serial.printf("dosis: chica=%.0f g  mediana=%.0f g  grande=%.0f g  (elegida: %d)\n",
+                  perfiles[0], perfiles[1], perfiles[2], perfil);
     Serial.printf("gramos/vuelta=%.3f  dosis=%.1f g  bateria=%.2f V  tapa=%s\n",
                   gramos_por_vuelta, dosis_g, leer_vbat(), puerta_cerrada() ? "cerrada" : "abierta");
 }
@@ -285,7 +307,11 @@ void setup() {
     anillo.setBrightness(80);
     prefs.begin("mate", false);
     gramos_por_vuelta = prefs.getFloat("gpv", gramos_por_vuelta);
-    dosis_g           = prefs.getFloat("dosis", dosis_g);
+    perfiles[0] = prefs.getFloat("d0", perfiles[0]);
+    perfiles[1] = prefs.getFloat("d1", perfiles[1]);
+    perfiles[2] = prefs.getFloat("d2", perfiles[2]);
+    perfil      = constrain(prefs.getInt("perfil", 1), 0, 2);
+    dosis_g     = perfiles[perfil];
     cambiar(REPOSO);
     leer_serie();
 }
@@ -300,16 +326,16 @@ void loop() {
         case REPOSO:
         case LISTO:
         case ERROR_ATASCO:
-            if (b == CORTO || b == DOBLE) {
+            if (b == CORTO || b == LARGO) {
                 if (v < VBAT_MIN) { avisar_naranja(2); Serial.println("Batería baja: cargá por USB-C"); break; }
-                if (b == CORTO) {
-                    if (!puerta_cerrada()) { avisar_naranja(3); break; }
-                    if (ciclo_limpieza()) cambiar(ESPERA_VUELTA); else cambiar(REPOSO);
-                } else {
+                if (puerta_cerrada()) {
+                    bool ok = ciclo_limpieza(b == LARGO ? LIMPIEZA_TRAMOS_LARGA : LIMPIEZA_TRAMOS);
+                    cambiar(ok ? ESPERA_VUELTA : REPOSO);
+                } else if (b == CORTO) {           // sin tapa no hay mate para limpiar: solo cargar
                     cambiar(ciclo_carga(dosis_g) ? LISTO : (estado == ERROR_ATASCO ? ERROR_ATASCO : REPOSO));
-                }
-            } else if (b == MUY_LARGO) { calibrar(); cambiar(REPOSO); }
-            else if (b == LARGO) dormir();
+                } else avisar_naranja(3);          // limpieza larga pedida sin la tapa
+            } else if (b == DOBLE) { elegir_perfil((perfil + 1) % 3); t_estado = millis(); }
+            else if (b == MUY_LARGO) { calibrar(); cambiar(REPOSO); }
             else if (millis() - t_estado > REPOSO_A_DORMIR_MS) dormir();
             break;
 

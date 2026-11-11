@@ -29,24 +29,29 @@ de sinfín y motor, y simuló **20.000 dosis** de la mejor. Estas son las medida
 | Parámetro | Valor |
 |---|---|
 | Motor del rotor | JGA25-370 de 6 V, ~130 rpm |
-| Paletas | 3 de TPU (set largo o corto según el mate) |
-| Secuencia | **6 tramos de 2,5 s**, alternando el sentido de giro |
-| Pasadas de paleta | ~88 en 15 s |
-| Qué tiene que lograr | Cada pasada debe sacar **al menos el 2,1 %** de la yerba pegada para llegar al 90 % |
+| Paletas | 3 de TPU, en tres largos: corta (60 mm), media (85 mm) y larga (110 mm) |
+| Secuencia normal | **8 tramos de 2,5 s (20 s)**, alternando el sentido de giro |
+| Limpieza larga | **16 tramos (40 s)**, manteniendo el botón 2 s: para yerba seca, reposada o mate dulce |
+| Pasadas de paleta | ~117 en 20 s |
+| Qué tiene que lograr | Cada pasada debe sacar **al menos el 1,6 %** de la yerba pegada para llegar al 90 % |
 
-Ese 2,1 % es **la meta de la prueba real**: la simulación no puede saber cuánto saca una paleta de
+Ese 1,6 % es **la meta de la prueba real**: la simulación no puede saber cuánto saca una paleta de
 una calabaza mojada. Si en la prueba saca menos, las opciones son más tiempo, paletas más duras o más rpm.
 
 ### Ciclo y batería
 
 | | Valor | Objetivo |
 |---|---|---|
-| Ciclo completo | **~36 s** (16 s limpieza + 6 s dar vuelta + 14,5 s carga) | < 45 s ✅ |
-| Energía por ciclo | ~37 mWh | |
-| Ciclos por carga de batería | **~440** | ≥ 20 ✅ |
+| Ciclo completo | **~41 s** (21 s limpieza + 6 s dar vuelta + 14,5 s carga) | < 45 s ✅ |
+| Energía por ciclo | ~44 mWh | |
+| Ciclos por carga de batería | **~370** | ≥ 20 ✅ |
 | Con 3 mates por día | Recarga cada ~4 meses | |
 | Tolva | ~560 cm³ ≈ 170 g ≈ **5-6 cebadas** | |
-| Cajón de residuos | Vaciar cada **2-3 ciclos** | |
+| Cajón de residuos | Vaciar cada **3 ciclos** | |
+| Tamaños de dosis | **20, 30 y 40 g** (doble toque para cambiar) | |
+
+La receta se probó después con **11 tipos de mate, 9 de yerba y 8 estados de la yerba usada**:
+ver [simulaciones.md](simulaciones.md).
 
 ## Qué cambió respecto del diseño anterior
 
@@ -65,4 +70,4 @@ Ya está aplicado en el modelo 3D, los STL y el firmware.
 2. **Gramos por vuelta**: mantené el botón 6 s (gira 20 vueltas), pesá y escribí `g=<gramos/20>`.
 3. **CV**: hacé 10 dosis y pesalas. Si el CV pasa de 15 %, bajá el paso a 26 mm.
 4. **Atascos**: si se traba más de 1 vez cada 20 dosis, pasá a un motor con más reducción.
-5. **Limpieza**: pesá el mate antes y después. Si saca menos del 90 %, subí `LIMPIEZA_TRAMOS` de 6 a 8.
+5. **Limpieza**: pesá el mate antes y después. Si saca menos del 90 %, subí `LIMPIEZA_TRAMOS` de 8 a 10.

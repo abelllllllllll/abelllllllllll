@@ -15,7 +15,7 @@ STL en [`mecanica/stl_v1/`](../../mecanica/stl_v1/), ya orientados para imprimir
 | `tapa_tolva` | PETG negro | 20 % | No | |
 | `asiento` | PETG natural | 30 % | No | |
 | `cubo_rotor` | PETG natural | 100 % | No | Lleva un prisionero M3 |
-| `paleta_larga` ×3, `paleta_corta` ×3 | **TPU 85-95A** | 100 % | No | Acostadas. Usá un set u otro según el mate |
+| `paleta_larga` ×3, `paleta_media` ×3, `paleta_corta` ×3 | **TPU 85-95A** | 100 % | No | Acostadas. Larga: camionero. Media: imperial, acero. Corta: calabazas, vidrio, cerámica |
 | `columna_motor` | PETG natural | 30 % | No | |
 | `cajon` | PETG negro | 15 % | No | El frente queda al ras de la carcasa |
 | `plato` | PETG natural | 30 % | No | |

@@ -69,6 +69,7 @@ cubo_h     = 10;
 eje_rotor_d = 4.0; eje_rotor_plano = 3.5;   // JGA25-370: eje Ø4 con cara plana
 paleta_esp = 2.6;
 paleta_larga = 110;   // set largo: mates altos (camionero, imperial)
+paleta_media = 85;    // set medio: imperial, acero térmico (lo pidió la simulación)
 paleta_corta = 60;    // set corto: calabacitas y mates bajos
 
 // --- Estación de carga ---
@@ -559,6 +560,7 @@ else if (pieza == "columna_motor") columna_motor();
 else if (pieza == "asiento")       translate([0, 0, -z_asiento(asiento_r0) + 12]) asiento();
 else if (pieza == "cubo_rotor")    translate([0, 0, cubo_h]) mirror([0, 0, 1]) cubo_rotor();
 else if (pieza == "paleta_larga")  translate([0, 0, paleta_esp/2]) rotate([-90, 0, 0]) paleta(paleta_larga);
+else if (pieza == "paleta_media")  translate([0, 0, paleta_esp/2]) rotate([-90, 0, 0]) paleta(paleta_media);
 else if (pieza == "paleta_corta")  translate([0, 0, paleta_esp/2]) rotate([-90, 0, 0]) paleta(paleta_corta);
 else if (pieza == "cajon")         translate([0, 0, -cajon_z]) cajon();
 else if (pieza == "tapa_limpieza") translate([0, 0, H]) mirror([0, 0, 1]) tapa_limpieza();

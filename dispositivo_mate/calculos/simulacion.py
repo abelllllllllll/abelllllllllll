@@ -40,7 +40,7 @@ MARGEN_MIN = 1.8           # el motor debe tener al menos 1,8 veces la fuerza ne
 # Limpieza
 RPM_ROTOR = 130
 PALETAS = 3
-TRAMOS, TRAMO_S = 6, 2.5   # 6 tramos de 2,5 s alternando sentido
+TRAMOS, TRAMO_S = 8, 2.5   # 8 tramos de 2,5 s alternando sentido
 
 # Energía (batería 2S de 2600 mAh)
 BATERIA_WH = 7.4 * 2.6 * 0.85
@@ -204,7 +204,7 @@ def main():
     a.axvline(necesaria * 100, color=V, ls="--", lw=1.5)
     a.annotate(f"mínimo {necesaria * 100:.1f} % por pasada", (necesaria * 100, 60), textcoords="offset points",
                xytext=(8, 0), color=V, weight="bold")
-    a.set(xlabel="Yerba pegada que saca cada pasada de paleta (%)", ylabel="Yerba retirada en 15 s (%)",
+    a.set(xlabel="Yerba pegada que saca cada pasada de paleta (%)", ylabel="Yerba retirada en 20 s (%)",
           title="3 · Limpieza: qué tiene que lograr cada pasada", ylim=(40, 101))
 
     a = ax[1, 1]

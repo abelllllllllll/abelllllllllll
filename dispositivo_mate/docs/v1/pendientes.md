@@ -14,13 +14,17 @@ Lo que dice "necesita prueba real" no se puede cerrar desde la computadora.
 - [x] **Paso de cables** entre la estación y la torre, elevado 11 mm sobre el piso (barrera de humedad).
 - [x] **Tolva con paredes a 60°**, para que la yerba baje sola.
 - [x] Rebajes para 4 patas de silicona.
+- [x] **Simulaciones con 14 mates, 9 yerbas y 8 estados de la yerba** ([simulaciones.md](simulaciones.md)).
+- [x] **Paleta media** (85 mm), **limpieza de 20 s**, **limpieza larga de 40 s** y **3 tamaños de dosis**.
 
 ## Diseño (se puede hacer sin imprimir)
 
 | # | Pendiente | Por qué importa |
 |---|---|---|
 | 1 | **Encastres entre piezas**: techo-carcasa (pestañas o tornillos), tolva-cuello (traba de un cuarto de vuelta) | Hoy apoyan sueltos |
-| 2 | **Junta o laberinto** entre cajón y carcasa, y bandeja que junte el agua que escurre | La yerba usada chorrea |
+| 2 | **Cajón estanco con rejilla**: hoy tiene la ranura abierta abajo | El mate lavado deja hasta 40 ml de agua por ciclo |
+| 2b | **Agitador en la tolva** | Las yerbas finas (uruguaya, chimarrão) hacen puente |
+| 2c | **Versión alta y ancha** (`H`, `nicho_ancho`) | Torpedo, uruguayo de boca ancha y guampa no entran |
 | 3 | **Tapa de limpieza con bisagra** en vez de suelta | Más cómodo y no se pierde |
 | 4 | **Esquema eléctrico y placa (PCB) propia** en KiCad | Reemplaza la placa perforada y los módulos sueltos |
 | 5 | **Fijación del motor N20 y su encoder** dentro del módulo derecho (hoy usa el soporte del banco) | Que no quede colgando |

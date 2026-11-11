@@ -18,8 +18,9 @@ sinfín horizontal (arriba del mate) le deja **30 g** de yerba nueva desde una t
 | | |
 |---|---|
 | Medidas | **290 × 230 × 220 mm** (ancho × fondo × alto) + tolva arriba hasta **354 mm**; dos módulos atornillados |
-| Mates compatibles | boca o virola de **Ø40 a Ø124 mm**, hasta **130 mm** de alto |
-| Dosis | **30 g** (configurable), ~15 s |
+| Mates compatibles | boca de **4 a 11 cm**, hasta **13 cm** de alto: 11 de los 14 tipos simulados |
+| Dosis | **20, 30 o 40 g** (se elige con doble toque), ~15 s |
+| Ciclo | **~41 s**: 20 s de limpieza + dar vuelta + 15 s de carga. Limpieza larga de 40 s para yerba seca |
 | Tolva | cilíndrica y removible, paredes a 60°, ~560 cm³ ≈ **5-6 cebadas** |
 | Batería | 2 × 18650 (2S), carga por USB-C |
 | Costo del prototipo | **≈ 100-135 €** |
@@ -29,6 +30,7 @@ sinfín horizontal (arriba del mate) le deja **30 g** de yerba nueva desde una t
 | [`docs/v1/viabilidad_y_produccion.md`](docs/v1/viabilidad_y_produccion.md) | **¿Es viable?** y qué falta para producirlo |
 | [`docs/v1/receta.md`](docs/v1/receta.md) | **La receta**: medidas y tiempos que salen de la simulación |
 | [`calculos/simulacion.py`](calculos/simulacion.py) | La simulación (dosis, fuerza del motor, limpieza, batería) |
+| [`docs/v1/simulaciones.md`](docs/v1/simulaciones.md) | **Simulaciones con todos los mates, yerbas y aguas** (14 mates, 9 yerbas, 8 estados) |
 | [`docs/v1/pendientes.md`](docs/v1/pendientes.md) | **Qué falta**: lista de pendientes del diseño, en orden |
 | [`docs/v1/lista_materiales.md`](docs/v1/lista_materiales.md) | Qué comprar, con precios orientativos |
 | [`docs/v1/conexiones.md`](docs/v1/conexiones.md) | Pines, alimentación y seguridad |

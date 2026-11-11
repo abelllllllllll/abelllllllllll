@@ -25,10 +25,14 @@ El mate entra por arriba en la limpieza porque tiene que **bajar sobre las palet
 ![Interior del equipo](../../mecanica/imagenes/v1_corte.png)
 
 1. **Sacás la bombilla**, levantás la tapa redonda y metés el mate **boca abajo**. Ponés la tapa y tocás el botón.
-2. Las paletas giran unos **15 segundos** (para un lado y para el otro) y la yerba usada cae al cajón.
+2. Las paletas giran unos **20 segundos** (para un lado y para el otro) y la yerba usada cae al cajón.
+   Si la yerba está seca o el mate es dulce, mantené el botón 2 segundos: hace una **limpieza larga de 40 s**.
 3. La luz late en azul: sacás el mate, lo **das vuelta** y lo ponés **boca arriba** en el nicho. Tocás el botón.
 4. El sinfín gira unos **15 segundos** y deja caer **30 g** de yerba nueva en la boca.
 5. Luz verde: listo para cebar.
+
+**Otros usos del botón:** con **doble toque** elegís la dosis (chica 20 g, mediana 30 g, grande 40 g).
+Si tocás el botón **sin la tapa puesta**, solo carga yerba (para un mate limpio).
 
 **¿Por qué entra cualquier mate?** El asiento es un **cono hecho de costillas**. Una boca chica apoya cerca del centro
 (más abajo) y una virola grande apoya más afuera (más arriba). Como es un cono, el mate **se centra solo**.
