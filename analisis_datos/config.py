@@ -39,6 +39,14 @@ MAX_GRAFICAS_POR_TIPO = 6
 # (por ejemplo, nombres o IDs, que no aportan en una gráfica de barras)
 MAX_CATEGORIAS_PARA_GRAFICAR = 30
 
+# En la gráfica "por mes" las columnas se SUMAN (ventas, piezas, gastos...).
+# Pero hay columnas donde sumar no tiene sentido (un precio, una edad, un %).
+# Si el nombre de la columna contiene alguna de estas palabras, se PROMEDIA.
+PALABRAS_PARA_PROMEDIAR = [
+    "precio", "promedio", "tasa", "porcentaje", "pct", "%",
+    "edad", "temperatura", "calificacion", "calificación", "puntaje", "rating",
+]
+
 # Colores de las gráficas
 COLOR_PRINCIPAL = "#4C72B0"
 COLOR_SECUNDARIO = "#DD8452"

@@ -32,11 +32,24 @@
 
 ### 📂 Proyectos
 
-- 📊 [Analizador de datos](analisis_datos/) — le das un CSV o Excel y te regresa un reporte con hallazgos y gráficas.
+#### 📊 [Analizador de datos](analisis_datos/)
+
+Le das un archivo CSV o Excel y te regresa un reporte en español con los hallazgos más importantes, estadísticas y gráficas.
+
+- 🐍 Hecho con **Python**, **pandas** y **matplotlib**
+- 🧹 Limpia los datos solo: duplicados, celdas vacías, `"$1,200"` → `1200`, fechas en texto
+- 🔒 Tus datos reales nunca se suben a GitHub
+- 👉 [Ver un reporte de ejemplo](analisis_datos/resultados/ventas_ejemplo/REPORTE.md)
+
+<p align="center">
+  <img width="420" src="analisis_datos/resultados/ventas_ejemplo/graficas/tiempo_total.png" alt="Ventas por mes" />
+  <img width="420" src="analisis_datos/resultados/ventas_ejemplo/graficas/barras_categoria.png" alt="Categorías más vendidas" />
+</p>
 
 ### 📫 Contacto
 
-- 📧 Correo: tu-correo@ejemplo.com
+- 💬 Escríbeme abriendo un [issue en este repositorio](https://github.com/abelllllllllll/abelllllllllll/issues)
+- 🐙 GitHub: [@abelllllllllll](https://github.com/abelllllllllll)
 
 <p align="center">
   <img src="https://komarev.com/ghpvc/?username=abelllllllllll&color=blueviolet&label=Visitas+al+perfil" alt="Visitas al perfil" />
