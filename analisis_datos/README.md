@@ -101,6 +101,7 @@ La mayoría de cambios se hacen en **`config.py`**, por ejemplo:
 - `TOP_VALORES = 5` → cuántos valores comunes mostrar por columna.
 - `UMBRAL_CORRELACION = 0.5` → qué tan fuerte debe ser una relación para mencionarla.
 - `MAX_GRAFICAS_POR_TIPO = 6` → para que el reporte no sea demasiado largo.
+- `PALABRAS_PARA_PROMEDIAR` → columnas que en la gráfica "por mes" se promedian en vez de sumarse (precios, edades, %...).
 - `COLOR_PRINCIPAL` → el color de las gráficas.
 
 Cada cambio importante se anota en [CAMBIOS.md](CAMBIOS.md).
