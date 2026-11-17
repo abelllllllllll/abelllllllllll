@@ -1,0 +1,26 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "mi compa claudio",
+      "intents": [
+        {
+          "name": "CharlaIntent",
+          "slots": [{ "name": "consulta", "type": "AMAZON.SearchQuery" }],
+          "samples": [
+            "che {consulta}",
+            "decime {consulta}",
+            "contame {consulta}",
+            "quiero saber {consulta}",
+            "pregunta {consulta}",
+            "explicame {consulta}",
+            "ayudame con {consulta}"
+          ]
+        },
+        { "name": "AMAZON.StopIntent", "samples": [] },
+        { "name": "AMAZON.CancelIntent", "samples": [] },
+        { "name": "AMAZON.HelpIntent", "samples": [] },
+        { "name": "AMAZON.FallbackIntent", "samples": [] }
+      ]
+    }
+  }
+}
