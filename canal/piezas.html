@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>El Mundo de Bruno - Piezas</title>
+<style>
+@font-face { font-family: Fredoka; src: url(../motion/fonts/Fredoka.woff2) format('woff2'); font-weight: 300 700; }
+@font-face { font-family: Nunito; src: url(../motion/fonts/Nunito.woff2) format('woff2'); font-weight: 200 1000; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Nunito, sans-serif; color: #22305A; overflow: hidden; position: relative; }
+.abs { position: absolute; }
+.t { font-family: Fredoka; font-weight: 700; line-height: 1; }
+.dot { position: absolute; border-radius: 50%; }
+.emoji { font-family: 'Noto Color Emoji'; line-height: 1; }
+.stroke { -webkit-text-stroke: var(--sw, 14px) #fff; paint-order: stroke fill; }
+</style>
+</head>
+<body>
+<script src="bruno.js"></script>
+<script>
+const kind = location.hash.slice(1);
+const B = document.body;
+function dots(w, h, n, seed, op = .3, ex = null) {
+  const pal = ['#FFD23F', '#3FB37F', '#FF9EB5', '#FF8A3D', '#8FB4FF'];
+  let s = '';
+  for (let i = 0; i < n; i++) {
+    const sz = 40 + ((i * 53 + seed) % 150);
+    const x = (i * 397 + seed * 7) % w, y = (i * 233 + seed * 13) % h;
+    if (ex && x + sz > ex[0] && x < ex[2] && y + sz > ex[1] && y < ex[3]) continue;
+    s += `<div class="dot" style="width:${sz}px;height:${sz}px;left:${x}px;top:${y}px;background:${pal[(i + seed) % 5]};opacity:${op}"></div>`;
+  }
+  return s;
+}
+function bear(w, h, x, y, extra = '') {
+  return `<div class="abs" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;${extra}">${bearSVG('b' + Math.random().toString(36).slice(2))}</div>`;
+}
+function fixArms() { document.querySelectorAll('[id$="-arm"]').forEach(a => a.setAttribute('transform', 'rotate(30 520 540)')); }
+
+if (kind === 'avatar') {
+  B.style.cssText += 'width:800px;height:800px;background:#FF8A3D;';
+  B.innerHTML += `<div class="abs" style="inset:36px;border-radius:50%;background:#FFF4E0;overflow:hidden">
+      <div class="abs" style="left:139px;top:90px;width:450px;height:514px;">${bearSVG('av')}</div></div>`;
+}
+
+if (kind === 'banner') {
+  B.style.cssText += 'width:2560px;height:1440px;background:#FFF4E0;';
+  B.innerHTML += dots(2560, 1440, 60, 3, .3, [480, 480, 2080, 960]) +
+    bear(380, 434, 548, 520) +
+    `<div class="abs t" style="left:960px;top:560px;font-size:86px;">El Mundo de</div>
+     <div class="abs t stroke" style="left:950px;top:640px;font-size:200px;color:#FF8A3D;text-shadow:0 12px 0 #E5641A;">Bruno</div>
+     <div class="abs" style="left:965px;top:860px;font-size:46px;font-weight:900;">Cuentos cortitos para ser buen amigo · Nuevo cada semana</div>`;
+}
+
+const eps = {
+  ep1: ['La última galletita', '🍪', '#FFD23F', '¿La comparte?'],
+  ep2: ['Día de lluvia', '☔', '#8FB4FF', '¡Se moja!'],
+  ep3: ['Pelea de robots', '🤖', '#3FB37F', '¡Es mío!'],
+  ep4: ['El globo perdido', '🎈', '#FF9EB5', '¡Se voló!'],
+  ep5: ['Canción para dormir', '🌙', '#22305A', 'Shhh…'],
+};
+if (eps[kind]) {
+  const [title, em, bg, hook] = eps[kind];
+  const dark = kind === 'ep5';
+  B.style.cssText += `width:1280px;height:720px;background:${bg};`;
+  B.innerHTML += dots(1280, 720, 30, kind.charCodeAt(2), dark ? .18 : .35, [380, 40, 1280, 520]) +
+    bear(470, 537, 40, 150) +
+    `<div class="abs emoji" style="left:430px;top:110px;font-size:170px;transform:rotate(-10deg)">${em}</div>
+     <div class="abs t" style="left:640px;top:70px;width:600px;font-size:44px;background:#FF3B30;color:#fff;display:inline-block;width:auto;padding:14px 30px;border-radius:999px;transform:rotate(-3deg)">${hook}</div>
+     <div class="abs t stroke" style="--sw:18px;left:620px;top:200px;width:620px;font-size:112px;color:${dark ? '#FFD23F' : '#22305A'};-webkit-text-stroke-color:${dark ? '#22305A' : '#fff'};">${title}</div>
+     <div class="abs t" style="right:36px;bottom:30px;font-size:34px;color:${dark ? '#FFF4E0' : '#22305A'};opacity:.9">El Mundo de Bruno 🐻</div>`;
+}
+fixArms();
+</script>
+</body>
+</html>
