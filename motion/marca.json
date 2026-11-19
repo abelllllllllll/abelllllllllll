@@ -1,0 +1,21 @@
+{
+  "nombre": "El Mundo de Bruno",
+  "lema": "Cuentos cortitos para ser buen amigo",
+  "colores": {
+    "naranja": "#FF8A3D",
+    "naranja_oscuro": "#E5641A",
+    "verde": "#3FB37F",
+    "crema": "#FFF4E0",
+    "amarillo": "#FFD23F",
+    "azul_noche": "#22305A",
+    "rosa": "#FF9EB5"
+  },
+  "tipografias": {
+    "titulos": "Fredoka (700)",
+    "textos": "Nunito (800)"
+  },
+  "logo": "Texto 'El Mundo de Bruno' en Fredoka 700: 'El Mundo de' en azul noche, 'Bruno' en naranja con borde crema, y la cara de Bruno al lado",
+  "personaje": "Bruno, osito naranja con panza crema y bufanda verde",
+  "tono": "Cálido, simple y alegre, pensado para chicos de 2 a 6 años y sus papás",
+  "formato_default": "Vertical 1080x1920, 30 fps"
+}

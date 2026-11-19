@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>El Mundo de Bruno - Promo</title>
+<style>
+@font-face { font-family: Fredoka; src: url(fonts/Fredoka.woff2) format('woff2'); font-weight: 300 700; }
+@font-face { font-family: Nunito; src: url(fonts/Nunito.woff2) format('woff2'); font-weight: 200 1000; }
+:root {
+  --naranja: #FF8A3D; --naranja-o: #E5641A; --verde: #3FB37F; --crema: #FFF4E0;
+  --amarillo: #FFD23F; --noche: #22305A; --rosa: #FF9EB5;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--crema); }
+body { font-family: Nunito, sans-serif; color: var(--noche); position: relative; }
+.abs { position: absolute; }
+.scene { position: absolute; inset: 0; opacity: 0; }
+#bg { position: absolute; inset: 0; }
+.blob { position: absolute; border-radius: 50%; }
+.title { font-family: Fredoka, sans-serif; font-weight: 700; text-align: center; line-height: 1.05; }
+.word { display: inline-block; margin: 0 4px; }
+.emoji { font-family: 'Noto Color Emoji'; }
+.card {
+  position: absolute; left: 90px; width: 900px; height: 190px; border-radius: 48px;
+  background: #fff; display: flex; align-items: center; gap: 36px; padding: 0 44px;
+  box-shadow: 0 14px 0 rgba(34,48,90,.12);
+}
+.card .ico { width: 120px; height: 120px; border-radius: 34px; display: flex; align-items: center; justify-content: center; font-size: 72px; }
+.card .txt { font-family: Fredoka; font-weight: 700; font-size: 62px; }
+.card .num { font-family: Nunito; font-weight: 900; font-size: 30px; opacity: .55; letter-spacing: 2px; }
+.chip {
+  position: absolute; left: 50%; padding: 34px 64px; border-radius: 999px; color: #fff;
+  font-family: Fredoka; font-weight: 700; font-size: 76px; white-space: nowrap;
+  box-shadow: 0 12px 0 rgba(0,0,0,.14);
+}
+.btn {
+  position: absolute; left: 50%; top: 1440px; padding: 40px 90px; border-radius: 999px;
+  background: #FF3B30; color: #fff; font-family: Fredoka; font-weight: 700; font-size: 84px;
+  box-shadow: 0 14px 0 #B81F16; white-space: nowrap;
+}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+
+<!-- Escena 1: gancho -->
+<div class="scene" id="s1">
+  <div class="title abs" id="s1t" style="left:60px; right:60px; top:560px; font-size:132px;"></div>
+  <div class="title abs" id="s1sub" style="left:60px; right:60px; top:1180px; font-size:70px; color:var(--naranja-o);">Mirá esto 👇</div>
+</div>
+
+<!-- Escena 2: Bruno -->
+<div class="scene" id="s2">
+  <div class="abs" id="bear2" style="left:190px; top:620px; width:700px; height:800px;"></div>
+  <div class="title abs" id="s2t" style="left:40px; right:40px; top:250px; font-size:140px;">¡Hola! Soy <span style="color:var(--naranja)">Bruno</span></div>
+  <div class="title abs" id="s2sub" style="left:60px; right:60px; top:1480px; font-size:66px; font-family:Nunito; font-weight:900;">un osito que aprende a<br>ser buen amigo</div>
+</div>
+
+<!-- Escena 3: episodios -->
+<div class="scene" id="s3">
+  <div class="title abs" id="s3t" style="left:40px; right:40px; top:190px; font-size:104px;">Mis aventuras</div>
+  <div id="cards"></div>
+</div>
+
+<!-- Escena 4: valores -->
+<div class="scene" id="s4">
+  <div class="title abs" id="s4t" style="left:60px; right:60px; top:300px; font-size:104px;">Cada cuento<br>enseña a…</div>
+  <div class="chip" id="c1" style="top:780px; background:var(--naranja);">🍪 compartir</div>
+  <div class="chip" id="c2" style="top:1030px; background:var(--verde);">🤝 ayudar</div>
+  <div class="chip" id="c3" style="top:1280px; background:#5B7BE0;">💛 ser buen amigo</div>
+</div>
+
+<!-- Escena 5: CTA -->
+<div class="scene" id="s5">
+  <div class="abs" id="bear5" style="left:340px; top:240px; width:400px; height:460px;"></div>
+  <div class="title abs" id="logo" style="left:40px; right:40px; top:760px;">
+    <div style="font-size:92px; color:var(--noche);">El Mundo de</div>
+    <div style="font-size:210px; color:var(--naranja); -webkit-text-stroke: 10px var(--crema); paint-order: stroke fill; text-shadow: 0 12px 0 var(--naranja-o);">Bruno</div>
+  </div>
+  <div class="title abs" id="s5sub" style="left:60px; right:60px; top:1180px; font-size:64px; font-family:Nunito; font-weight:900;">Nuevo episodio cada semana</div>
+  <div class="btn" id="btn">▶ ¡Suscribite!</div>
+</div>
+
+<script>
+// ---------- utilidades ----------
+const clamp = (x, a=0, b=1) => Math.min(b, Math.max(a, x));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const outCubic = x => 1 - Math.pow(1 - x, 3);
+const inCubic = x => x * x * x;
+const outBack = x => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const outElastic = x => x === 0 ? 0 : x === 1 ? 1 : Math.pow(2, -10 * x) * Math.sin((x * 10 - 0.75) * (2 * Math.PI / 3)) + 1;
+const $ = id => document.getElementById(id);
+
+// ---------- Bruno (SVG) ----------
+function bearSVG(id) {
+  return `
+<svg viewBox="0 0 700 800" width="100%" height="100%" style="overflow:visible">
+  <ellipse cx="350" cy="780" rx="230" ry="26" fill="rgba(34,48,90,.15)" id="${id}-shadow"/>
+  <g id="${id}-body">
+    <!-- cuerpo -->
+    <ellipse cx="350" cy="590" rx="210" ry="190" fill="#FF8A3D"/>
+    <ellipse cx="350" cy="620" rx="135" ry="130" fill="#FFE3C2"/>
+    <!-- patas -->
+    <ellipse cx="240" cy="755" rx="80" ry="45" fill="#E5641A"/>
+    <ellipse cx="460" cy="755" rx="80" ry="45" fill="#E5641A"/>
+    <!-- brazo izquierdo -->
+    <ellipse cx="160" cy="580" rx="55" ry="95" fill="#FF8A3D" transform="rotate(20 160 580)"/>
+    <!-- brazo que saluda -->
+    <g id="${id}-arm">
+      <ellipse cx="545" cy="470" rx="55" ry="100" fill="#FF8A3D"/>
+    </g>
+    <!-- cabeza -->
+    <g id="${id}-head">
+      <circle cx="190" cy="150" r="70" fill="#FF8A3D"/><circle cx="190" cy="150" r="38" fill="#FFB98A"/>
+      <circle cx="510" cy="150" r="70" fill="#FF8A3D"/><circle cx="510" cy="150" r="38" fill="#FFB98A"/>
+      <circle cx="350" cy="280" r="200" fill="#FF8A3D"/>
+      <ellipse cx="350" cy="350" rx="105" ry="80" fill="#FFE3C2"/>
+      <ellipse cx="350" cy="315" rx="36" ry="26" fill="#22305A"/>
+      <path d="M350 340 Q350 375 315 380 M350 340 Q350 375 385 380" stroke="#22305A" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <g id="${id}-eyes">
+        <ellipse cx="275" cy="240" rx="30" ry="38" fill="#3B2314"/>
+        <ellipse cx="425" cy="240" rx="30" ry="38" fill="#3B2314"/>
+        <circle cx="286" cy="226" r="11" fill="#fff"/><circle cx="436" cy="226" r="11" fill="#fff"/>
+      </g>
+      <ellipse cx="225" cy="320" rx="30" ry="18" fill="#FF9EB5" opacity=".75"/>
+      <ellipse cx="475" cy="320" rx="30" ry="18" fill="#FF9EB5" opacity=".75"/>
+    </g>
+    <!-- bufanda -->
+    <path d="M190 445 Q350 510 510 445 L515 500 Q350 565 185 500 Z" fill="#3FB37F"/>
+    <path d="M420 490 L470 490 L480 620 L425 610 Z" fill="#2E9466"/>
+  </g>
+</svg>`;
+}
+$('bear2').innerHTML = bearSVG('b2');
+$('bear5').innerHTML = bearSVG('b5');
+
+// ---------- fondo con burbujas ----------
+const blobs = [];
+const palette = ['#FFD23F', '#3FB37F', '#FF9EB5', '#FF8A3D', '#8FB4FF'];
+for (let i = 0; i < 14; i++) {
+  const el = document.createElement('div');
+  el.className = 'blob';
+  const size = 60 + ((i * 53) % 140);
+  el.style.width = el.style.height = size + 'px';
+  el.style.background = palette[i % palette.length];
+  el.style.opacity = '.28';
+  $('bg').appendChild(el);
+  blobs.push({ el, x: (i * 197) % 1080, y: (i * 331) % 1920, sp: 18 + (i % 5) * 9, ph: i * 1.7, size });
+}
+
+// ---------- escena 1 ----------
+const s1words = ['¿Buscás', 'dibujitos', 'lindos', 'para', 'tu', 'peque?'];
+$('s1t').innerHTML = s1words.map((w, i) => `<span class="word" id="w${i}">${w}</span>`).join(' ');
+
+// ---------- escena 3: tarjetas ----------
+const eps = [
+  ['🍪', 'La última galletita', '#FFE9C7'],
+  ['☔', 'Día de lluvia', '#DDE8FF'],
+  ['🤖', 'Pelea de robots', '#E3F6EC'],
+  ['🎈', 'El globo perdido', '#FFE0E7'],
+  ['🌙', 'Canción para dormir', '#E6E1FF'],
+];
+$('cards').innerHTML = eps.map((e, i) => `
+  <div class="card" id="card${i}" style="top:${430 + i * 240}px">
+    <div class="ico emoji" style="background:${e[2]}">${e[0]}</div>
+    <div><div class="num">EPISODIO ${i + 1}</div><div class="txt">${e[1]}</div></div>
+  </div>`).join('');
+
+// ---------- ventanas de escena ----------
+const scenes = [
+  ['s1', 0.0, 3.6], ['s2', 3.6, 7.6], ['s3', 7.6, 13.2], ['s4', 13.2, 16.6], ['s5', 16.6, 20.01],
+];
+const bgColors = ['#FFF4E0', '#FFE7CC', '#FFF4E0', '#E9F7EF', '#FFF4E0'];
+
+function sceneAlpha(t, a, b) {
+  const fi = a === 0 ? 1 : prog(t, a - 0.15, a + 0.15);
+  const fo = b >= 20 ? 1 : 1 - prog(t, b - 0.15, b + 0.15);
+  return Math.min(fi, fo);
+}
+
+function pop(el, t, start, dur = 0.5, fromY = 60) {
+  const p = prog(t, start, start + dur);
+  el.style.opacity = clamp(p * 3);
+  el.style.transform = `translateY(${(1 - outCubic(p)) * fromY}px) scale(${0.6 + 0.4 * outBack(p)})`;
+}
+
+function animateBear(id, t, start, wave = true) {
+  const body = $(id + '-body'), arm = $(id + '-arm'), eyes = $(id + '-eyes'), sh = $(id + '-shadow');
+  const p = prog(t, start, start + 0.8);
+  const drop = (1 - outElastic(p)) * -700;
+  const bob = Math.sin((t - start) * 5) * 10 * clamp(p * 2);
+  body.setAttribute('transform', `translate(0 ${drop + bob}) rotate(${Math.sin((t - start) * 2.5) * 2} 350 600)`);
+  sh.setAttribute('opacity', clamp(p * 1.5));
+  const waveAng = wave ? Math.sin((t - start) * 11) * 22 + 30 : 0;
+  arm.setAttribute('transform', `rotate(${waveAng} 520 540)`);
+  // parpadeo
+  const blinkPhase = ((t - start) % 2.3);
+  const blink = blinkPhase > 2.15 ? 0.1 : 1;
+  eyes.setAttribute('transform', `translate(0 ${240 * (1 - blink)}) scale(1 ${blink})`);
+}
+
+window.render = function (t) {
+  // fondo
+  let bgi = scenes.findIndex(s => t >= s[1] && t < s[2]); if (bgi < 0) bgi = 4;
+  document.body.style.background = bgColors[bgi];
+  blobs.forEach(b => {
+    const y = ((b.y - t * b.sp * 6) % 2100 + 2100) % 2100 - 180;
+    const x = b.x + Math.sin(t * 0.9 + b.ph) * 40;
+    b.el.style.transform = `translate(${x}px, ${y}px)`;
+  });
+
+  scenes.forEach(([id, a, b]) => { $(id).style.opacity = sceneAlpha(t, a, b); $(id).style.display = (t > a - 0.2 && t < b + 0.2) ? 'block' : 'none'; });
+
+  // escena 1
+  s1words.forEach((w, i) => pop($('w' + i), t, 0.15 + i * 0.22, 0.45));
+  pop($('s1sub'), t, 1.9, 0.5);
+  $('s1sub').style.transform += ` translateY(${Math.sin(t * 6) * 10}px)`;
+
+  // escena 2
+  if (t > 3.4 && t < 7.9) {
+    animateBear('b2', t, 3.7);
+    pop($('s2t'), t, 4.3, 0.55);
+    pop($('s2sub'), t, 5.0, 0.55);
+  }
+
+  // escena 3
+  pop($('s3t'), t, 7.75, 0.5);
+  eps.forEach((e, i) => {
+    const el = $('card' + i);
+    const st = 8.2 + i * 0.55;
+    const p = prog(t, st, st + 0.55);
+    el.style.opacity = clamp(p * 3);
+    const wig = Math.sin((t - st) * 3 + i) * 1.2 * clamp(p * 2);
+    el.style.transform = `translateX(${(1 - outBack(p)) * (i % 2 ? 1100 : -1100)}px) rotate(${wig}deg)`;
+  });
+
+  // escena 4
+  pop($('s4t'), t, 13.35, 0.5);
+  ['c1', 'c2', 'c3'].forEach((c, i) => {
+    const el = $(c); const st = 13.9 + i * 0.45; const p = prog(t, st, st + 0.5);
+    el.style.opacity = clamp(p * 3);
+    el.style.transform = `translateX(-50%) scale(${outBack(p)}) rotate(${(1 - p) * (i % 2 ? 12 : -12)}deg)`;
+  });
+
+  // escena 5
+  if (t > 16.4) {
+    animateBear('b5', t, 16.7);
+    pop($('logo'), t, 17.2, 0.6, 100);
+    pop($('s5sub'), t, 17.8, 0.5);
+    const p = prog(t, 18.2, 18.7);
+    const pulse = 1 + Math.sin((t - 18.7) * 8) * 0.04 * prog(t, 18.7, 18.9);
+    $('btn').style.opacity = clamp(p * 3);
+    $('btn').style.transform = `translateX(-50%) scale(${outBack(p) * pulse})`;
+  }
+};
+render(0);
+</script>
+</body>
+</html>
