@@ -26,8 +26,9 @@ def cargar(ruta: Path) -> pd.DataFrame:
         try:
             return pd.read_excel(ruta)
         except ImportError:
+            libreria = "xlrd" if extension == ".xls" else "openpyxl"
             raise ImportError(
-                "Para leer Excel instala esto primero:  pip install openpyxl"
+                f"Para leer archivos {extension} instala esto primero:  pip install {libreria}"
             )
 
     raise ValueError(f"No sé leer archivos '{extension}'. Usa CSV o Excel.")
