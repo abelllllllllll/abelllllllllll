@@ -15,7 +15,7 @@ con lo más importante, estadísticas y gráficas. Sin tener que programar nada.
 pip install -r requirements.txt
 ```
 
-**2. Poner tus datos** en la carpeta `datos/` (archivos `.csv` o `.xlsx`).
+**2. Poner tus datos** en la carpeta `datos/` (archivos `.csv`, `.xlsx` o `.xls`).
 
 **3. Ejecutar:**
 

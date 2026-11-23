@@ -5,6 +5,16 @@ Lo más nuevo va arriba.
 
 ---
 
+## 23/11/2026 — Leer Excel viejos (.xls)
+
+**Qué se hizo:** se agregó `xlrd` a `requirements.txt` y el mensaje de error ahora dice
+qué librería falta según el archivo (`openpyxl` para `.xlsx`, `xlrd` para `.xls`).
+
+**Por qué:** el analizador aceptaba `.xls`, pero sin `xlrd` fallaba y el mensaje
+pedía instalar `openpyxl`, que no sirve para ese formato.
+
+---
+
 ## 13/11/2026 — Gráfica por mes: sumar o promediar según la columna
 
 **Qué se hizo:** en la gráfica "por mes", las columnas como `precio_unitario`
