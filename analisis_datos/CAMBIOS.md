@@ -5,6 +5,17 @@ Lo más nuevo va arriba.
 
 ---
 
+## 13/11/2026 — Gráfica por mes: sumar o promediar según la columna
+
+**Qué se hizo:** en la gráfica "por mes", las columnas como `precio_unitario`
+ahora se **promedian** en vez de sumarse. El título de cada gráfica dice si es "suma" o "promedio".
+Las palabras que activan el promedio están en `config.py` → `PALABRAS_PARA_PROMEDIAR`.
+
+**Por qué:** sumar precios de todo un mes da un número que no significa nada.
+El precio promedio del mes sí se entiende. Las ventas o piezas se siguen sumando.
+
+---
+
 ## 07/11/2026 — Privacidad de los datos
 
 **Qué se hizo:** los archivos en `datos/` y sus reportes en `resultados/` ya no se suben a GitHub.
@@ -26,5 +37,4 @@ Solo se suben los datos de ejemplo, que son inventados.
 
 **Pendiente / ideas para siguientes versiones:**
 - Probarlo con datos reales y ajustar según lo que haga falta.
-- La gráfica "por mes" suma todas las columnas numéricas; en columnas como
-  `precio_unitario` sumar no tiene mucho sentido. Ajustar cuando se usen datos reales.
+- ~~La gráfica "por mes" suma todas las columnas numéricas~~ ✅ Resuelto el 13/11/2026.

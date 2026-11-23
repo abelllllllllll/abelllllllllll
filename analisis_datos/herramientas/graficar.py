@@ -5,7 +5,7 @@ Crea las gráficas como imágenes PNG. Cada función crea un tipo de gráfica:
 
     histogramas      -> cómo se reparten los valores de cada columna numérica
     barras           -> los valores más comunes de cada columna de texto
-    linea_de_tiempo  -> cómo cambian los números mes a mes
+    linea_de_tiempo  -> cómo cambian los números mes a mes (suma o promedio)
     mapa_correlacion -> qué columnas numéricas se mueven juntas
 """
 
@@ -62,16 +62,25 @@ def linea_de_tiempo(tabla, fechas, numeros, carpeta):
         return []
     col_fecha = fechas[0]
     resultado = []
-    por_mes = tabla.set_index(col_fecha)[numeros].resample("MS").sum()
-    if len(por_mes) < 2:
+    meses = tabla.set_index(col_fecha)[numeros].resample("MS")
+    if meses.ngroups < 2:
         return []
     for col in numeros[: config.MAX_GRAFICAS_POR_TIPO]:
+        promediar = _se_promedia(col)
+        por_mes = meses[col].mean() if promediar else meses[col].sum()
+        calculo = "promedio" if promediar else "suma"
         fig, ax = plt.subplots()
-        ax.plot(por_mes.index, por_mes[col], marker="o", color=config.COLOR_PRINCIPAL)
-        ax.set(title=f"'{col}' por mes (suma)", xlabel="Mes", ylabel=col)
+        ax.plot(por_mes.index, por_mes.values, marker="o", color=config.COLOR_PRINCIPAL)
+        ax.set(title=f"'{col}' por mes ({calculo})", xlabel="Mes", ylabel=col)
         fig.autofmt_xdate()
         resultado.append(_guardar(fig, carpeta, f"tiempo_{col}", f"{col} a lo largo del tiempo"))
     return resultado
+
+
+def _se_promedia(columna):
+    """True si en esta columna sumar no tiene sentido (precios, edades, %...)."""
+    nombre = columna.lower()
+    return any(palabra in nombre for palabra in config.PALABRAS_PARA_PROMEDIAR)
 
 
 def mapa_correlacion(tabla, numeros, carpeta):

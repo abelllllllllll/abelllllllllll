@@ -1,5 +1,5 @@
 # 📊 Reporte de análisis: `ventas_ejemplo`
-_Generado el 07/11/2026 a las 12:29_
+_Generado el 13/11/2026 a las 11:43_
 
 ## 1. Lo más importante
 
